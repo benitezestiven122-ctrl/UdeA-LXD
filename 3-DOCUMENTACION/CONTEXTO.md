@@ -54,7 +54,7 @@ Todo está en `js/datos-demo.js` y lo redactó la IA el 10 de noviembre de 2026 
 | `sesiones/sesion-01.html` … `sesion-10.html` | Lee objetivo, recursos y actividad; marca la sesión como completada |
 | `bitacora.html` | Escribe y guarda una reflexión en tres campos |
 | `bitacora-guardada.html` | Confirma que el borrador se guardó y decide qué hacer después |
-| `nodo-ia.html` | Lee casos, filtra por disciplina y comparte una experiencia |
+| `nodo-ia.html` | Gira la red 3D de proyectos, papers y bitácoras; abre un nodo, desliza (o usa flechas) para ver otros; añade un nodo o va a uno al azar |
 | `nodo-ia-caso.html` | Lee un caso, deja un reconocimiento y comenta |
 | `coordinador.html` | Filtra la cohorte por estado y abre el detalle de un docente |
 | `404.html` | Encuentra una salida cuando la dirección no existe |
@@ -105,10 +105,12 @@ Textos propuestos por aprobar: los listados por Miguel para Inicio, Mapa, Sesion
 
 - **Terminado:** 15 páginas navegables con Hotjar y Maze; aviso de privacidad; eventos; página 404; `.htaccess`; menú móvil; refuerzo visual v1.1; plan de evaluación; README y bitácora.
 - **En curso:** publicación en Hostinger (Miguel); configuración de Maze y verificación de Hotjar (Juanjo y Stiven).
+- **Nodo IA (11 nov):** red 3D hecha en canvas sin librerías; 3 proyectos, 5 papers (referencias reales, resúmenes de demostración por verificar) y 3 bitácoras de ejemplo con multimedia ilustrativa. La bitácora acepta fotos, video y audio (fotos reducidas en `localStorage`; de video y audio solo el nombre). Interruptor "Modo coordinador" en la cabecera de todas las páginas.
+- **Modo coordinador integrado (11 nov):** entrada simulada por rol, sin credenciales. El coordinador navega las mismas páginas que el docente con extras: tarjeta «Seguimiento de la cohorte» en Inicio, «Editar módulo» y «Crear módulo opcional» en el mapa, objetivos editables y «entregaron / Editar sesión» en cada sesión del módulo, herramientas en cada sesión y «Entregas de bitácora» + revisión en Mi bitácora. `coordinador.html` queda como vista detallada del seguimiento.
 - **En desarrollo:** perfil de coordinador ampliado (editar módulos y sesiones, revisar bitácoras). Plan por fases y estado en `PLAN-PERFIL-COORDINADOR.md`; retomar desde ahí.
 - **Siguiente:** prueba piloto, pruebas con 3 a 5 docentes, análisis para la entrega individual del 17 de noviembre.
 - **Decisiones pendientes del equipo:**
-  1. ¿El módulo de evaluación (10 sesiones) es el Módulo 3 de la ficha?
+  1. Resuelto (11 nov): el sitio tiene las 15 sesiones del diplomado en `sesiones/sesion-01.html` a `sesion-15.html`. Además, los nombres de los módulos difieren entre la ficha institucional (mapa) y la presentación (pastillas de cada sesión); el equipo debe elegir uno.
   2. URL de Nodo IA.
   3. Aprobar el refuerzo visual v1.1 y el color del H1.
   4. Aprobar el texto del aviso de privacidad y de la página 404.

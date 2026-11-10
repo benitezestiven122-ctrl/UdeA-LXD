@@ -8,7 +8,7 @@
 
   var KEY = 'ser-profe-ia-demo-v1';
   var NOTICE_KEY = 'ser-profe-ia-aviso-v1';
-  var TOTAL = 10;
+  var TOTAL = 15;
   var root = document.body.getAttribute('data-root') || '';
   var page = document.body.getAttribute('data-page');
 
@@ -49,6 +49,9 @@
   var state = load();
 
   function pad(n) { return n < 10 ? '0' + n : String(n); }
+  // Títulos reales de las sesiones 1 a 10 (js/datos-demo.js, tomados de la presentación del diplomado).
+  var SES = (window.SPIA_DEMO && window.SPIA_DEMO.sesiones) || [];
+  function sessionTitle(n) { return SES[n - 1] ? SES[n - 1].titulo : 'Título pendiente de confirmar'; }
   function sessionHref(n) { return root + 'sesiones/sesion-' + pad(n) + '.html'; }
   function doneCount() { var c = 0; for (var i = 1; i <= TOTAL; i++) if (state.completed[i]) c++; return c; }
   function nextSession() { for (var i = 1; i <= TOTAL; i++) if (!state.completed[i]) return i; return null; }
@@ -175,7 +178,7 @@
     var title = document.querySelector('[data-hero-title]');
     var sub = document.querySelector('[data-hero-sub]');
     if (title) title.textContent = done === 0 ? 'Comienza tu recorrido' : (next ? 'Continúa donde lo dejaste' : 'Completaste el módulo');
-    if (sub) sub.textContent = next ? 'Sesión ' + pad(next) + ' · Título pendiente de confirmar' : 'Las 10 sesiones están marcadas como completadas.';
+    if (sub) sub.textContent = next ? 'Sesión ' + pad(next) + ' · ' + sessionTitle(next) : 'Las ' + TOTAL + ' sesiones están marcadas como completadas.';
     var bp = document.querySelector('[data-bitacora-pill]');
     if (bp) {
       var hasDraft = Object.keys(state.drafts || {}).length > 0;
@@ -257,17 +260,9 @@
     applyView(p);
   }
   if (profileSelect) {
-    // "Coordinador pedagógico" no es una vista del mapa: lleva a su propia página.
-    profileSelect.value = page === 'coordinador' ? 'coordinador' : state.profile;
-    profileSelect.addEventListener('change', function () {
-      if (profileSelect.value === 'coordinador') {
-        track('perfil_coordinador');
-        window.location.href = root + 'coordinador.html';
-        return;
-      }
-      setProfile(profileSelect.value);
-      if (page === 'coordinador') window.location.href = root + 'index.html';
-    });
+    // El modo coordinador se elige en la pantalla de entrada (js/extras.js), no aquí.
+    profileSelect.value = state.profile;
+    profileSelect.addEventListener('change', function () { setProfile(profileSelect.value); });
   }
 
   /* ---------- Bitácora ---------- */
@@ -353,6 +348,11 @@
       var any = false;
       fields.forEach(function (f) { data[f.getAttribute('data-field')] = f.value; if (f.value.trim()) any = true; });
       if (archivo) { data.archivo = archivo; any = true; }
+      // Multimedia (js/extras.js): fotos reducidas; de video y audio solo el nombre.
+      if (window.SPIA && typeof window.SPIA.getMedia === 'function') {
+        var media = window.SPIA.getMedia();
+        if (media.length) { data.media = media; any = true; }
+      }
       ok.hidden = true; err.hidden = true;
       if (!any) {
         errText.textContent = 'Escribe algo en al menos un campo antes de guardar.';
@@ -426,7 +426,7 @@
   var INDEX = [
     { t: 'Inicio', d: 'Tu espacio de aprendizaje', h: 'index.html' },
     { t: 'Mapa del curso', d: 'Módulos e hitos del diplomado', h: 'mapa-curso.html' },
-    { t: 'Módulo de evaluación', d: '10 sesiones', h: 'modulo-evaluacion.html', k: 'evaluacion sesiones' },
+    { t: 'Sesiones 1 a 10', d: 'Módulos 1 a 4 del diplomado', h: 'modulo-evaluacion.html', k: 'sesiones modulo evaluacion recorrido' },
     { t: 'Mi bitácora', d: 'Lo que aprendí, cómo lo aplico y mis dudas', h: 'bitacora.html', k: 'reflexion borrador' },
     { t: 'Nodo IA', d: 'Casos y experiencias sobre IA en el aula', h: 'nodo-ia.html', k: 'repositorio casos etica debate comentarios compartir' },
     { t: 'Módulo 01', d: 'Posicionamiento crítico frente a la IA en educación', h: 'mapa-curso.html' },
@@ -436,7 +436,7 @@
     { t: 'Módulo 05', d: 'Proyecto aplicado: diseño e implementación', h: 'mapa-curso.html' },
     { t: 'Hitos del proyecto final', d: 'Semanas 4, 7, 10, 12 y 14', h: 'mapa-curso.html', k: 'hito modalidad diagnostico marco etico propuesta entrega presentacion' }
   ];
-  for (var s = 1; s <= TOTAL; s++) INDEX.push({ t: 'Sesión ' + pad(s), d: 'Módulo de evaluación', h: 'sesiones/sesion-' + pad(s) + '.html', k: 'sesion ' + s });
+  for (var s = 1; s <= TOTAL; s++) INDEX.push({ t: 'Sesión ' + pad(s), d: sessionTitle(s), h: 'sesiones/sesion-' + pad(s) + '.html', k: 'sesion ' + s + ' ' + (SES[s - 1] ? SES[s - 1].claves : '') });
 
   function bindSearch() {
     var form = document.querySelector('[data-search]');

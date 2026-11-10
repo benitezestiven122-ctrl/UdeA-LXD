@@ -23,8 +23,9 @@ La columna "Función del backlog" usa las historias de usuario del backlog prior
 **Misiones opcionales** si Juanjo quiere medirlas (decidir antes de poner el estudio en vivo):
 - Adjuntar una evidencia a la reflexión → éxito: `bitacora-guardada.html`, con el evento `archivo_adjuntado`.
 - Pedir ayuda al equipo del diplomado → evento `clic_contactar_tutor` (el panel no cambia la URL, así que Maze no lo mide por ruta; se observa en Hotjar).
-- Encontrar un caso sobre ética y comentarlo → éxito: URL que contiene `nodo-ia-caso.html`.
-- Coordinador: ver quiénes están en riesgo → evento `clic_filtro_riesgo` en `coordinador.html`.
+- Encontrar un caso sobre ética y comentarlo → éxito: URL que contiene `nodo-ia-caso.html` (desde la red 3D: clic en un nodo → "Comentar y reconocer"). El lector deslizable no cambia la URL; se observa con los eventos `nodo_abierto` y `nodo_siguiente` en Hotjar.
+- Coordinador: entrar con `/?reset=1` → «Coordinador pedagógico» → «Ver seguimiento de la cohorte» → filtro «En riesgo» (eventos `entrar_coordinador`, `clic_seguimiento_cohorte`, `clic_filtro_riesgo`).
+- Coordinador: ver quién entregó la bitácora de la sesión 2 → módulo → «entregaron» (evento `coordinador_entregas`).
 
 **Supuesto frente a hallazgo:** que el botón principal se entienda, que el mapa sea claro y que la confirmación tranquilice son **supuestos de diseño** hasta que los datos de Maze y Hotjar los respalden o los contradigan.
 
@@ -35,8 +36,8 @@ La columna "Función del backlog" usa las historias de usuario del backlog prior
 Proyecto en Maze: **Diplomado IA**. Un bloque Website Test por misión.
 
 **URL inicial**
-- Misión 1: `https://diplomadoia.proyectosdeclase.online/?reset=1` (deja el progreso en cero y vuelve a mostrar el aviso de privacidad).
-- Misiones 2 y 3: `https://diplomadoia.proyectosdeclase.online/index.html` (sin `reset`, para que el aviso no reaparezca en cada tarea).
+- Misión 1: `https://diplomadoia.proyectosdeclase.online/?reset=1&modo=docente` (deja el progreso en cero y vuelve a mostrar el aviso de privacidad).
+- Misiones 2 y 3: `https://diplomadoia.proyectosdeclase.online/index.html?modo=docente` (sin `reset`, para que el aviso no reaparezca en cada tarea).
 
 ### Misión 1
 - **Task:** Retoma tu diplomado
@@ -47,7 +48,7 @@ Proyecto en Maze: **Diplomado IA**. Un bloque Website Test por misión.
 
 ### Misión 2
 - **Task:** Encuentra una actividad
-- **Description:** Un colega te contó que la sesión 3 del módulo sobre evaluación tiene una actividad para hacer. Encuéntrala.
+- **Description:** Un colega te contó que en la sesión 3, la de marcos regulatorios, hay que preparar una infografía. Encuentra esa actividad.
 - **Destino esperado:** `/sesiones/sesion-03.html`
 - **Pregunta posterior (escala 1 a 5):** ¿Qué tan fácil fue encontrarla?
 - **Pregunta abierta:** ¿Hubo algún nombre o sección que te hiciera dudar? ¿Cuál?

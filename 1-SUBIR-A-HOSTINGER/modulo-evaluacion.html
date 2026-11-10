@@ -45,12 +45,12 @@
 })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '56ffa75c-a9f7-4348-a7d5-4436974a8a7c');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Módulo de evaluación · Ser profe en la era de la IA</title>
+<title>Sesiones del diplomado · Ser profe en la era de la IA</title>
 <meta name="description" content="Prototipo del entorno de aprendizaje del diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Geist:wght@600;700&amp;family=Jost:wght@400;500;600&amp;display=swap">
-<link rel="stylesheet" href="css/estilos.css?v=20261110f">
+<link rel="stylesheet" href="css/estilos.css?v=20261111f">
 <link rel="icon" type="image/svg+xml" href="assets/imagenes/favicon.svg">
 </head>
 <body data-root="" data-page="modulo">
@@ -66,7 +66,6 @@
       <select id="perfil" data-profile>
         <option value="guiado">Docente · paso a paso</option>
         <option value="libre">Docente · exploración libre</option>
-        <option value="coordinador">Coordinador pedagógico</option>
       </select>
     </div>
   </div>
@@ -89,25 +88,51 @@
 </nav>
 <main id="contenido" class="page-main" tabindex="-1">
   <div class="container">
-    <nav aria-label="Migas de navegación"><ol class="breadcrumbs"><li><a href="index.html">Inicio</a></li><li><a href="mapa-curso.html">Mapa del curso</a></li><li><span aria-current="page">Módulo de evaluación</span></li></ol></nav>
+    <nav aria-label="Migas de navegación"><ol class="breadcrumbs"><li><a href="index.html">Inicio</a></li><li><a href="mapa-curso.html">Mapa del curso</a></li><li><span aria-current="page">Sesiones del diplomado</span></li></ol></nav>
     <section class="page-intro">
-      <p class="eyebrow">03 / Módulo de evaluación</p>
-      <h1>Módulo de evaluación</h1>
-      <p>Este módulo se organiza en diez sesiones. Elige una para comenzar o continúa donde quedaste.</p>
+      <p class="eyebrow">03 / Sesiones del diplomado</p>
+      <h1>Las 15 sesiones</h1>
+      <p>Las 15 sesiones del diplomado, una por semana, en cinco módulos. Cada semana: 2 horas de encuentro, 3 de trabajo autónomo y un artefacto para tu Caja de herramientas.</p>
     </section>
 
-    <div class="split">
+    <section class="helix" data-helix aria-labelledby="helix-title">
+      <div class="helix__head">
+        <div>
+          <p class="eyebrow">Tu recorrido en 3D</p>
+          <h2 class="h4" id="helix-title">Cada esfera es una semana</h2>
+        </div>
+        <ul class="helix__legend" aria-label="Módulos">
+          <li><span class="dot dot--m1" aria-hidden="true"></span>Módulo 1</li>
+          <li><span class="dot dot--m2" aria-hidden="true"></span>Módulo 2</li>
+          <li><span class="dot dot--m3" aria-hidden="true"></span>Módulo 3</li>
+          <li><span class="dot dot--m4" aria-hidden="true"></span>Módulo 4</li>
+          <li><span class="dot dot--m5" aria-hidden="true"></span>Módulo 5</li>
+        </ul>
+      </div>
+      <canvas class="helix__canvas" tabindex="0" aria-label="Espiral 3D con las 15 sesiones. Arrastra o usa las flechas para girarla y haz clic en una esfera para abrir la sesión. La lista de sesiones está debajo."></canvas>
+      <div class="helix__tip" data-helix-tip hidden></div>
+      <p class="helix__help small" aria-hidden="true">Arrastra para girar · clic en una esfera para abrir la sesión</p>
+    </section>
+
+    <div class="split section">
       <section class="panel" aria-labelledby="objetivos-title">
-        <h2 class="h4" id="objetivos-title">Objetivos del módulo</h2>
-        <span class="pill pill--soon">Contenido pendiente de confirmar</span>
-        <p class="text-secondary">Los objetivos se publicarán cuando estén verificados en los documentos oficiales del diplomado.</p>
+        <h2 class="h4" id="objetivos-title">Resultados de aprendizaje</h2>
+        <p class="text-secondary">Lo que busca cada módulo, según la propuesta del diplomado.</p>
+        <ol class="ra-list">
+          <li><span class="dot dot--m1" aria-hidden="true"></span><span><strong>Módulo 1 · Sesiones 1–3.</strong> Comprender el panorama de la IAGen y posicionarse críticamente frente a marcos regulatorios nacionales e internacionales.</span></li>
+          <li><span class="dot dot--m2" aria-hidden="true"></span><span><strong>Módulo 2 · Sesiones 4–6.</strong> Analizar cómo la IA reconfigura la relación docente–estudiante y reflexionar sobre la autoría y el aprendizaje genuino.</span></li>
+          <li><span class="dot dot--m3" aria-hidden="true"></span><span><strong>Módulo 3 · Sesiones 7–9.</strong> Rediseñar actividades evaluativas para contextos donde se tiene acceso a IA generativa.</span></li>
+          <li><span class="dot dot--m4" aria-hidden="true"></span><span><strong>Módulo 4 · Sesiones 10–11.</strong> Tomar posición fundamentada frente a dilemas éticos y reconocer la carga laboral invisible que genera la IA.</span></li>
+          <li><span class="dot dot--m5" aria-hidden="true"></span><span><strong>Módulo 5 · Sesiones 12–15.</strong> Generar un artefacto pedagógico transferible que materialice las comprensiones del diplomado.</span></li>
+        </ol>
       </section>
       <section class="panel panel--soft" aria-labelledby="avance-title">
         <h2 class="h4" id="avance-title">Tu avance</h2>
-        <div class="progress" role="progressbar" aria-label="Sesiones completadas del módulo" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" data-progress>
+        <div class="progress-ring" data-ring aria-hidden="true"><span data-progress-percent>0%</span></div>
+        <div class="progress" role="progressbar" aria-label="Sesiones completadas" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0" data-progress>
           <div class="progress__fill" data-progress-fill></div>
         </div>
-        <p class="small text-secondary" data-progress-text>0 de 10 sesiones completadas · Demostración local</p>
+        <p class="small text-secondary" data-progress-text>0 de 15 sesiones completadas · Demostración local</p>
         <a class="btn btn--primary" id="btn-continuar-modulo" href="sesiones/sesion-01.html" data-continue>Continuar mi curso<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </section>
     </div>
@@ -115,95 +140,145 @@
     <section class="section" aria-labelledby="sesiones-title">
       <div class="section-heading"><h2 id="sesiones-title">Sesiones</h2></div>
       <ol class="session-list">
-      <li class="session-card" data-session-card="1">
+      <li class="session-group" id="modulo-1"><span class="dot dot--m1" aria-hidden="true"></span>Módulo 1 &#183; Reconocimiento y posicionamiento crítico</li>
+      <li class="session-card session-card--m1" data-session-card="1" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 01</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 01 &#183; Semana 1</p>
+          <h3>¿Qué está pasando? ¿La IA entra a nuestras aulas sin que lo hayamos decidido?</h3>
+          <p class="small text-secondary">Entrada 1 · Diario de posición inicial + Mapa colectivo de preguntas</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-01" href="sesiones/sesion-01.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-01" href="sesiones/sesion-01.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="2">
+      <li class="session-card session-card--m1" data-session-card="2" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 02</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 02 &#183; Semana 2</p>
+          <h3>La IA como objeto de análisis: materialidad, sesgos y costos invisibles</h3>
+          <p class="small text-secondary">Entrada 2 · Nota crítica + Reporte de auditoría</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-02" href="sesiones/sesion-02.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-02" href="sesiones/sesion-02.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="3">
+      <li class="session-card session-card--m1" data-session-card="3" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 03</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 03 &#183; Semana 3</p>
+          <h3>Marcos regulatorios y el lugar de las Facultades de Educación en la agenda IA</h3>
+          <p class="small text-secondary">Entrada 3 · Infografía síntesis de regulación IA + Posición ante el contexto (foro)</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-03" href="sesiones/sesion-03.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-03" href="sesiones/sesion-03.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="4">
+      <li class="session-group" id="modulo-2"><span class="dot dot--m2" aria-hidden="true"></span>Módulo 2 &#183; Mediación pedagógica y didáctica</li>
+      <li class="session-card session-card--m2" data-session-card="4" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 04</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 04 &#183; Semana 4</p>
+          <h3>La mediación pedagógica reconfigurada: docente – IA – estudiante</h3>
+          <p class="small text-secondary">Entrada 4 · Bitácora didáctica (1) + Hito 1 (elección de modalidad)</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-04" href="sesiones/sesion-04.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-04" href="sesiones/sesion-04.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="5">
+      <li class="session-card session-card--m2" data-session-card="5" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 05</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 05 &#183; Semana 5</p>
+          <h3>Autoría, co-creación y la barrera del significado</h3>
+          <p class="small text-secondary">Entrada 5 · Matriz de co-creación + Bitácora didáctica (2)</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-05" href="sesiones/sesion-05.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-05" href="sesiones/sesion-05.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="6">
+      <li class="session-card session-card--m2" data-session-card="6" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 06</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 06 &#183; Semana 6</p>
+          <h3>¿Cómo aprenden mis estudiantes cuando tienen IA disponible?</h3>
+          <p class="small text-secondary">Entrada 6 · Reflexión matética + Bitácora didáctica (3)</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-06" href="sesiones/sesion-06.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-06" href="sesiones/sesion-06.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="7">
+      <li class="session-group" id="modulo-3"><span class="dot dot--m3" aria-hidden="true"></span>Módulo 3 &#183; Diseño curricular, evaluación y gestión académica con IA</li>
+      <li class="session-card session-card--m3" data-session-card="7" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 07</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 07 &#183; Semana 7</p>
+          <h3>Rediseñar la evaluación: del producto al proceso</h3>
+          <p class="small text-secondary">Entrada 7 · Sistema evaluativo rediseñado + Guía de retroalimentación + Hito 2</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-07" href="sesiones/sesion-07.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-07" href="sesiones/sesion-07.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="8">
+      <li class="session-card session-card--m3" data-session-card="8" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 08</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 08 &#183; Semana 8</p>
+          <h3>Planeación curricular y gestión académica: ¿dónde puede apoyar la IA?</h3>
+          <p class="small text-secondary">Entrada 8 · Mapa de prácticas + Calendario de uso responsable + Análisis crítico</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-08" href="sesiones/sesion-08.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-08" href="sesiones/sesion-08.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="9">
+      <li class="session-card session-card--m3" data-session-card="9" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 09</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 09 &#183; Semana 9</p>
+          <h3>La IA en la enseñanza de mi área disciplinar: alcances y límites reales</h3>
+          <p class="small text-secondary">Entrada 9 · Ficha disciplinar de uso de IA + Bitácora didáctica (4) + Hito 3</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-09" href="sesiones/sesion-09.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-09" href="sesiones/sesion-09.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
-      <li class="session-card" data-session-card="10">
+      <li class="session-group" id="modulo-4"><span class="dot dot--m4" aria-hidden="true"></span>Módulo 4 &#183; Ética, soberanía tecnológica y bienestar docente</li>
+      <li class="session-card session-card--m4" data-session-card="10" data-tilt>
         <div class="session-card__body">
-          <p class="eyebrow">Sesión 10</p>
-          <h3>Título pendiente de confirmar</h3>
-          <p class="small text-secondary">Objetivo, contenido y actividad: Disponible próximamente</p>
+          <p class="eyebrow">Sesión 10 &#183; Semana 10</p>
+          <h3>Ética de la IA en el aula: dilemas reales, decisiones situadas y límites pedagógicos</h3>
+          <p class="small text-secondary">Entrada 10 · Plan de Uso ético personal + Bitácora didáctica (5)</p>
         </div>
         <span class="pill pill--pending" data-session-pill>Pendiente</span>
-        <a class="btn btn--secondary" id="btn-sesion-10" href="sesiones/sesion-10.html" data-session-link>Comenzar sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-sesion-10" href="sesiones/sesion-10.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+      </li>
+      <li class="session-card session-card--m4" data-session-card="11" data-tilt>
+        <div class="session-card__body">
+          <p class="eyebrow">Sesión 11 &#183; Semana 11</p>
+          <h3>Soberanía tecnológica, automatización y bienestar docente</h3>
+          <p class="small text-secondary">Entrada 11 · Plan de uso responsable + Contribución a lineamientos + Bitácora (6)</p>
+        </div>
+        <span class="pill pill--pending" data-session-pill>Pendiente</span>
+        <a class="btn btn--secondary" id="btn-sesion-11" href="sesiones/sesion-11.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+      </li>
+      <li class="session-group" id="modulo-5"><span class="dot dot--m5" aria-hidden="true"></span>Módulo 5 &#183; Desarrollo del proyecto aplicado</li>
+      <li class="session-card session-card--m5" data-session-card="12" data-tilt>
+        <div class="session-card__body">
+          <p class="eyebrow">Sesión 12 &#183; Semana 12</p>
+          <h3>Elección definitiva de modalidad y arquitectura del Artefacto/Caja de Herramientas</h3>
+          <p class="small text-secondary">Entrada 12 · Propuesta ajustada + Cronograma + Bitácora de proceso (1) + Hito 4</p>
+        </div>
+        <span class="pill pill--pending" data-session-pill>Pendiente</span>
+        <a class="btn btn--secondary" id="btn-sesion-12" href="sesiones/sesion-12.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+      </li>
+      <li class="session-card session-card--m5" data-session-card="13" data-tilt>
+        <div class="session-card__body">
+          <p class="eyebrow">Sesión 13 &#183; Semana 13</p>
+          <h3>Desarrollo del Artefacto/Caja de Herramientas</h3>
+          <p class="small text-secondary">Entrada 13 · Avance del artefacto final (50–60%) + Bitácora de proceso (2)</p>
+        </div>
+        <span class="pill pill--pending" data-session-pill>Pendiente</span>
+        <a class="btn btn--secondary" id="btn-sesion-13" href="sesiones/sesion-13.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+      </li>
+      <li class="session-card session-card--m5" data-session-card="14" data-tilt>
+        <div class="session-card__body">
+          <p class="eyebrow">Sesión 14 &#183; Semana 14</p>
+          <h3>Entrega del Artefacto/Caja de Herramientas</h3>
+          <p class="small text-secondary">Entrada 14 · Artefacto final (Hito 5) + Diario de cierre + Bitácora (3)</p>
+        </div>
+        <span class="pill pill--pending" data-session-pill>Pendiente</span>
+        <a class="btn btn--secondary" id="btn-sesion-14" href="sesiones/sesion-14.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+      </li>
+      <li class="session-card session-card--m5" data-session-card="15" data-tilt>
+        <div class="session-card__body">
+          <p class="eyebrow">Sesión 15 &#183; Semana 15</p>
+          <h3>Presentación de Artefactos/Cajas de herramientas y cierre del diplomado</h3>
+          <p class="small text-secondary">Entrada 15 · Caja completa (14 entradas + artefacto final) + Publicación en Nodo IA</p>
+        </div>
+        <span class="pill pill--pending" data-session-pill>Pendiente</span>
+        <a class="btn btn--secondary" id="btn-sesion-15" href="sesiones/sesion-15.html" data-session-link><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </li>
       </ol>
     </section>
@@ -216,7 +291,7 @@
       <ul class="site-footer__links">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="mapa-curso.html">Mapa del curso</a></li>
-        <li><a href="modulo-evaluacion.html">Módulo de evaluación</a></li>
+        <li><a href="modulo-evaluacion.html">Sesiones del diplomado</a></li>
         <li><a href="bitacora.html">Mi bitácora</a></li>
         <li><a href="nodo-ia.html">Nodo IA</a></li>
       </ul>
@@ -224,8 +299,8 @@
     <p class="site-footer__note">Prototipo académico del equipo LXD para el diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia. El progreso y la bitácora son una demostración local: se guardan solo en este navegador y no son una entrega académica.</p>
   </div>
 </footer>
-<script src="js/datos-demo.js?v=20261110f"></script>
-<script src="js/main.js?v=20261110f"></script>
-<script src="js/extras.js?v=20261110f"></script>
+<script src="js/datos-demo.js?v=20261111f"></script>
+<script src="js/main.js?v=20261111f"></script>
+<script src="js/extras.js?v=20261111f"></script>
 </body>
 </html>

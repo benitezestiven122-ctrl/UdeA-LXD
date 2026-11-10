@@ -57,6 +57,7 @@ CÓMO SABER SI HOTJAR Y MAZE ESTÁN FUNCIONANDO
 
 IMPORTANTE
 ----------
-- Para las pruebas, empezar siempre en: https://diplomadoia.proyectosdeclase.online/?reset=1
+- Para las pruebas, empezar siempre en: https://diplomadoia.proyectosdeclase.online/?reset=1&modo=docente
+  (modo=docente evita la pantalla de entrada por rol).
   (deja el progreso en cero para que todos empiecen igual).
 - No poner contraseñas ni correos de acceso en ningún archivo del sitio.

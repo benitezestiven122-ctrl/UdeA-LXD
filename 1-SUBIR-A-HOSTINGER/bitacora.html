@@ -50,7 +50,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Geist:wght@600;700&amp;family=Jost:wght@400;500;600&amp;display=swap">
-<link rel="stylesheet" href="css/estilos.css?v=20261110f">
+<link rel="stylesheet" href="css/estilos.css?v=20261111f">
 <link rel="icon" type="image/svg+xml" href="assets/imagenes/favicon.svg">
 </head>
 <body data-root="" data-page="bitacora">
@@ -66,7 +66,6 @@
       <select id="perfil" data-profile>
         <option value="guiado">Docente · paso a paso</option>
         <option value="libre">Docente · exploración libre</option>
-        <option value="coordinador">Coordinador pedagógico</option>
       </select>
     </div>
   </div>
@@ -112,6 +111,11 @@
             <option value="8">Sesión 08</option>
             <option value="9">Sesión 09</option>
             <option value="10">Sesión 10</option>
+            <option value="11">Sesión 11</option>
+            <option value="12">Sesión 12</option>
+            <option value="13">Sesión 13</option>
+            <option value="14">Sesión 14</option>
+            <option value="15">Sesión 15</option>
           </select>
         </div>
         <p class="small text-secondary">Pregunta guía de la sesión: Disponible próximamente.</p>
@@ -141,6 +145,17 @@
           </div>
           <p class="field__help"><strong>Demostración local.</strong> Solo guardamos el nombre del archivo; el archivo no sale de tu computador.</p>
         </div>
+        <div class="field">
+          <span class="field__label" id="lbl-media">Multimedia (opcional)</span>
+          <p class="field__help" id="ayuda-media">Fotos, un video corto o una nota de voz de tu clase. Hasta 4 archivos.</p>
+          <div class="file-picker">
+            <input class="visually-hidden" type="file" id="campo-media" accept="image/*,video/*,audio/*" multiple aria-labelledby="lbl-media" aria-describedby="ayuda-media" data-media-input tabindex="-1">
+            <button type="button" class="btn btn--secondary" id="btn-agregar-multimedia" data-media-button><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="m21 16-5-5-8 8"></path></svg>Agregar multimedia</button>
+            <span class="file-picker__name" data-media-count role="status">Sin archivos multimedia</span>
+          </div>
+          <div class="media-grid" data-media-preview data-hj-suppress></div>
+          <p class="field__help"><strong>Demostración local.</strong> Las fotos se guardan reducidas en este navegador; de los videos y audios solo guardamos el nombre.</p>
+        </div>
         <div class="notice notice--feedback" data-revision hidden></div>
         <div class="form-actions">
           <button type="submit" class="btn btn--primary" id="btn-guardar-borrador">Guardar borrador</button>
@@ -154,6 +169,9 @@
         <h2 class="h4" id="borradores-title">Tus borradores</h2>
         <ul class="drafts" data-drafts></ul>
         <p class="small text-secondary" data-drafts-empty>Todavía no has guardado ningún borrador.</p>
+        <h2 class="h4" id="ejemplos-title">Ejemplos de bitácora</h2>
+        <p class="small text-secondary">Así se ve una bitácora con fotos, video o una nota de voz.</p>
+        <ul class="node-list node-list--stack" data-bitacora-ejemplos aria-labelledby="ejemplos-title"></ul>
       </aside>
     </div>
   </div>
@@ -165,7 +183,7 @@
       <ul class="site-footer__links">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="mapa-curso.html">Mapa del curso</a></li>
-        <li><a href="modulo-evaluacion.html">Módulo de evaluación</a></li>
+        <li><a href="modulo-evaluacion.html">Sesiones del diplomado</a></li>
         <li><a href="bitacora.html">Mi bitácora</a></li>
         <li><a href="nodo-ia.html">Nodo IA</a></li>
       </ul>
@@ -173,8 +191,8 @@
     <p class="site-footer__note">Prototipo académico del equipo LXD para el diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia. El progreso y la bitácora son una demostración local: se guardan solo en este navegador y no son una entrega académica.</p>
   </div>
 </footer>
-<script src="js/datos-demo.js?v=20261110f"></script>
-<script src="js/main.js?v=20261110f"></script>
-<script src="js/extras.js?v=20261110f"></script>
+<script src="js/datos-demo.js?v=20261111f"></script>
+<script src="js/main.js?v=20261111f"></script>
+<script src="js/extras.js?v=20261111f"></script>
 </body>
 </html>

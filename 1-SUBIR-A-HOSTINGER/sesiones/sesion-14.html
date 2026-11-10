@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Hotjar Tracking Code for Diplomado IA 2026-2 -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6847283,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+<!-- Maze (proyecto Diplomado IA) -->
+<script>
+(function (m, a, z, e) {
+  var s, t, u, v;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+
+  u = document.currentScript || (function () {
+    var w = document.getElementsByTagName('script');
+    return w[w.length - 1];
+  })();
+  v = u && u.nonce;
+
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  if (v) s.setAttribute('nonce', v);
+
+  a.getElementsByTagName('head')[0].appendChild(s);
+
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '56ffa75c-a9f7-4348-a7d5-4436974a8a7c');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sesión 14 · Ser profe en la era de la IA</title>
+<meta name="description" content="Prototipo del entorno de aprendizaje del diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Geist:wght@600;700&amp;family=Jost:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="../css/estilos.css?v=20261111f">
+<link rel="icon" type="image/svg+xml" href="../assets/imagenes/favicon.svg">
+</head>
+<body data-root="../" data-page="sesion" data-session="14">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__mark" aria-hidden="true">P<span>IA</span></span>
+      <span class="brand__name"><span>Ser profe</span> <span>en la era de la IA</span></span>
+    </a>
+    <div class="profile">
+      <label for="perfil">Perfil de prueba</label>
+      <select id="perfil" data-profile>
+        <option value="guiado">Docente · paso a paso</option>
+        <option value="libre">Docente · exploración libre</option>
+      </select>
+    </div>
+  </div>
+</header>
+<nav class="site-nav" aria-label="Principal">
+  <div class="container site-nav__inner">
+    <ul class="site-nav__links">
+      <li><a class="site-nav__link" href="../index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"></path><path d="M5 10v10h5v-6h4v6h5V10"></path></svg>Inicio</a></li>
+      <li><a class="site-nav__link" href="../mapa-curso.html" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 21 12 12 21 3 12z"></path></svg>Mapa del curso</a></li>
+      <li><a class="site-nav__link" href="../bitacora.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>Mi bitácora</a></li>
+      <li><a class="site-nav__link" href="../nodo-ia.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"></circle><circle cx="18" cy="8" r="2.5"></circle><circle cx="11" cy="18" r="2.5"></circle><path d="M8.3 7l7.3.7M7 8.3l3 7.4M16.6 10l-4.2 6"></path></svg>Nodo IA</a></li>
+    </ul>
+    <form class="search-form" role="search" data-search>
+      <label class="visually-hidden" for="buscar">Buscar un tema o actividad</label>
+      <input class="site-nav__search" id="buscar" type="search" placeholder="Buscar un tema o actividad" autocomplete="off">
+      <button class="search-form__btn" type="submit" aria-label="Buscar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
+      <div class="search-results" data-search-results hidden></div>
+    </form>
+  </div>
+</nav>
+<main id="contenido" class="page-main" tabindex="-1">
+  <div class="container">
+    <nav aria-label="Migas de navegación"><ol class="breadcrumbs"><li><a href="../mapa-curso.html">Mapa del curso</a></li><li><a href="../modulo-evaluacion.html">Sesiones del diplomado</a></li><li><span aria-current="page">Sesión 14</span></li></ol></nav>
+    <div class="session-layout">
+      <aside class="session-sidebar" aria-labelledby="lista-sesiones">
+        <p class="session-sidebar__title" id="lista-sesiones">Sesiones del diplomado</p>
+        <ol class="session-nav">
+          <li><a href="sesion-01.html" data-nav-session="1">Sesión 01<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-02.html" data-nav-session="2">Sesión 02<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-03.html" data-nav-session="3">Sesión 03<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-04.html" data-nav-session="4">Sesión 04<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-05.html" data-nav-session="5">Sesión 05<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-06.html" data-nav-session="6">Sesión 06<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-07.html" data-nav-session="7">Sesión 07<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-08.html" data-nav-session="8">Sesión 08<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-09.html" data-nav-session="9">Sesión 09<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-10.html" data-nav-session="10">Sesión 10<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-11.html" data-nav-session="11">Sesión 11<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-12.html" data-nav-session="12">Sesión 12<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-13.html" data-nav-session="13">Sesión 13<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-14.html" aria-current="page" data-nav-session="14">Sesión 14<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-15.html" data-nav-session="15">Sesión 15<span class="session-nav__state" data-nav-state></span></a></li>
+        </ol>
+      </aside>
+
+      <article class="session-content" aria-labelledby="sesion-titulo">
+        <div class="session-mobile">
+          <label for="ir-sesion">Ir a otra sesión</label>
+          <select id="ir-sesion" data-session-jump>
+          <option value="sesion-01.html">Sesión 01</option>
+          <option value="sesion-02.html">Sesión 02</option>
+          <option value="sesion-03.html">Sesión 03</option>
+          <option value="sesion-04.html">Sesión 04</option>
+          <option value="sesion-05.html">Sesión 05</option>
+          <option value="sesion-06.html">Sesión 06</option>
+          <option value="sesion-07.html">Sesión 07</option>
+          <option value="sesion-08.html">Sesión 08</option>
+          <option value="sesion-09.html">Sesión 09</option>
+          <option value="sesion-10.html">Sesión 10</option>
+          <option value="sesion-11.html">Sesión 11</option>
+          <option value="sesion-12.html">Sesión 12</option>
+          <option value="sesion-13.html">Sesión 13</option>
+          <option value="sesion-14.html" selected>Sesión 14</option>
+          <option value="sesion-15.html">Sesión 15</option>
+          </select>
+        </div>
+
+        <header class="session-head">
+          <div class="phase-track" role="img" aria-label="Fase 5 de 5 del diplomado"><span class="phase-track__step is-done">1</span><span class="phase-track__step is-done">2</span><span class="phase-track__step is-done">3</span><span class="phase-track__step is-done">4</span><span class="phase-track__step is-current">5</span></div>
+          <p class="eyebrow">Sesión 14 de 15 &#183; Semana 14 &#183; Fase 5</p>
+          <h1 id="sesion-titulo">Sesión 14</h1>
+          <p class="lead">Entrega del Artefacto/Caja de Herramientas</p>
+          <div class="row">
+            <span class="pill pill--pending" data-session-pill>Pendiente</span>
+            <span class="pill pill--phase pill--phase-5">Módulo 5 &#183; Desarrollo del proyecto aplicado</span>
+            <span class="pill pill--hito">Hito 5 · Entrega y presentación final</span>
+          </div>
+        </header>
+
+        <section class="session-section" aria-labelledby="obj-14">
+          <h2 id="obj-14">Objetivo de aprendizaje</h2>
+          <p class="session-objective">Cerrar el desarrollo del proyecto verificando la coherencia entre el dilema, las decisiones y el artefacto, construyendo una narrativa honesta del recorrido —incluido lo que no funcionó— y preparando una presentación pública clara.</p>
+        </section>
+
+        <section class="session-section" aria-labelledby="din-14">
+          <h2 id="din-14">Dinámica de la sesión</h2>
+          <ul class="plain-list" data-glossary><li>Semana de cierre del artefacto: convertir el trabajo en proceso en un producto terminado.</li><li>Revisión de coherencia interna, prueba de transferibilidad final y preparación de una presentación de 8 minutos que jerarquiza lo esencial.</li></ul>
+          <p class="notice notice--pattern">Las semanas 13 a 15 rompen el patrón: asesorías grupales, presentación de proyectos y plenaria de cierre.</p>
+        </section>
+
+        <section class="session-section" aria-labelledby="top-14">
+          <h2 id="top-14">Tópicos centrales</h2>
+          <p class="small text-secondary">Toca cada tarjeta para ver el detalle.</p>
+          <ul class="topic-cards"><li><button type="button" class="topic-card" aria-pressed="false" data-topic><span class="topic-card__inner"><span class="topic-card__face topic-card__front"><span class="topic-card__num">01</span><strong>Revisión de coherencia</strong><span class="topic-card__hint">Ver detalle</span></span><span class="topic-card__face topic-card__back"><strong>Revisión de coherencia</strong> del proyecto final entre dilema–decisiones–artefacto.<span class="topic-card__hint">Volver</span></span></span></button></li><li><button type="button" class="topic-card" aria-pressed="false" data-topic><span class="topic-card__inner"><span class="topic-card__face topic-card__front"><span class="topic-card__num">02</span><strong>Evaluación de transferencia final</strong><span class="topic-card__hint">Ver detalle</span></span><span class="topic-card__face topic-card__back"><strong>Evaluación de transferencia final</strong> desde una mirada externa.<span class="topic-card__hint">Volver</span></span></span></button></li><li><button type="button" class="topic-card" aria-pressed="false" data-topic><span class="topic-card__inner"><span class="topic-card__face topic-card__front"><span class="topic-card__num">03</span><strong>Narrativa del proceso</strong><span class="topic-card__hint">Ver detalle</span></span><span class="topic-card__face topic-card__back"><strong>Narrativa del proceso</strong> como componente evaluable.<span class="topic-card__hint">Volver</span></span></span></button></li></ul>
+        </section>
+
+        <section class="session-section" aria-labelledby="semana-14">
+          <h2 id="semana-14">Tu semana: 5 horas y un artefacto</h2>
+          <ol class="week" data-week="14"><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="0"><span class="week__dot" aria-hidden="true">1</span><span class="week__name">Encuentro sincrónico</span><span class="week__time">2 h</span><span class="week__desc">Participa en la dinámica: casos, taller, conversatorio o triadas, con material propio.</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="1"><span class="week__dot" aria-hidden="true">2</span><span class="week__name">Lectura guiada</span><span class="week__time">1 h</span><span class="week__desc">Lee el texto de la semana (por ejemplo Selwyn, Crawford o Papert).</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="2"><span class="week__dot" aria-hidden="true">3</span><span class="week__name">Exploración con IA</span><span class="week__time">1 h</span><span class="week__desc">Prueba una herramienta o rediseña con material propio, y registra lo que ocurrió.</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="3"><span class="week__dot" aria-hidden="true">4</span><span class="week__name">Escritura del artefacto</span><span class="week__time">1 h</span><span class="week__desc">Escribe el artefacto: nota, bitácora, matriz, rúbrica o plan.</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="4"><span class="week__dot" aria-hidden="true">5</span><span class="week__name">Entrega y Caja</span><span class="week__time">Al cerrar la semana</span><span class="week__desc">Entrega y ve cómo el artefacto se suma a su Caja de herramientas.</span></button></li></ol>
+          <p class="small text-secondary" data-week-status role="status">Marca cada paso cuando lo completes. Se guarda solo en este navegador.</p>
+        </section>
+
+        <section class="session-section" aria-labelledby="rec-14">
+          <h2 id="rec-14">Contenido y recursos</h2>
+          <div class="resource-frame"><p>Lectura guiada y materiales de la sesión: Disponible próximamente</p></div>
+        </section>
+
+        <section class="session-section" id="actividad" aria-labelledby="act-14">
+          <h2 id="act-14">Actividad de la sesión 14</h2>
+          <div class="artifact">
+            <p class="eyebrow">Artefacto semanal &#183; Entrada 14 de 15</p>
+            <h3 class="artifact__title">Entrada 14 · Artefacto final (Hito 5) + Diario de cierre + Bitácora (3)</h3>
+            <p class="artifact__desc">El Diario de Cierre, leído junto al Diario de Entrada de la Semana 1, hace visible el recorrido completo del aprendizaje entre el punto de partida y el de llegada.</p>
+          </div>
+          <p class="small text-secondary">Contenido tomado de la presentación sintética del diplomado (equipo LXD).</p>
+        </section>
+
+<section class="session-section panel panel--soft" aria-labelledby="bit-14">
+          <h2 id="bit-14">Mi bitácora</h2>
+          <p>Registra lo que vas descubriendo en esta sesión.</p>
+          <div><a class="btn btn--secondary" href="../bitacora.html?sesion=14">Abrir mi bitácora<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a></div>
+        </section>
+
+        <div class="session-controls">
+          <div class="session-controls__group">
+            <a class="btn btn--secondary" href="../modulo-evaluacion.html">Ver todas las sesiones</a>
+            <button type="button" class="btn btn--secondary" data-toggle-complete>Marcar como completada</button>
+          </div>
+          <div class="session-controls__group">
+            <a class="btn btn--secondary" href="sesion-13.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4M10 6l-6 6 6 6"></path></svg>Sesión anterior</a>
+            <a class="btn btn--primary" href="sesion-15.html">Siguiente sesión<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+          </div>
+        </div>
+        <p class="status-note" data-complete-note role="status"></p>
+      </article>
+    </div>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <img class="site-footer__logo" src="../assets/imagenes/logo-udea.webp" width="73" height="96" alt="Logo de la Universidad de Antioquia">
+    <nav aria-label="Índice del sitio">
+      <ul class="site-footer__links">
+        <li><a href="../index.html">Inicio</a></li>
+        <li><a href="../mapa-curso.html">Mapa del curso</a></li>
+        <li><a href="../modulo-evaluacion.html">Sesiones del diplomado</a></li>
+        <li><a href="../bitacora.html">Mi bitácora</a></li>
+        <li><a href="../nodo-ia.html">Nodo IA</a></li>
+      </ul>
+    </nav>
+    <p class="site-footer__note">Prototipo académico del equipo LXD para el diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia. El progreso y la bitácora son una demostración local: se guardan solo en este navegador y no son una entrega académica.</p>
+  </div>
+</footer>
+<script src="../js/datos-demo.js?v=20261111f"></script>
+<script src="../js/main.js?v=20261111f"></script>
+<script src="../js/extras.js?v=20261111f"></script>
+</body>
+</html>

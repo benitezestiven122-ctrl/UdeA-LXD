@@ -50,7 +50,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Geist:wght@600;700&amp;family=Jost:wght@400;500;600&amp;display=swap">
-<link rel="stylesheet" href="css/estilos.css?v=20261110f">
+<link rel="stylesheet" href="css/estilos.css?v=20261111f">
 <link rel="icon" type="image/svg+xml" href="assets/imagenes/favicon.svg">
 </head>
 <body data-root="" data-page="inicio">
@@ -66,7 +66,6 @@
       <select id="perfil" data-profile>
         <option value="guiado">Docente · paso a paso</option>
         <option value="libre">Docente · exploración libre</option>
-        <option value="coordinador">Coordinador pedagógico</option>
       </select>
     </div>
   </div>
@@ -99,7 +98,7 @@
       <section class="card card--hero" aria-labelledby="hero-title">
         <div class="card__top">
           <p class="eyebrow">Mi recorrido</p>
-          <span class="pill pill--light">Módulo de evaluación</span>
+          <span class="pill pill--light">Sesiones del diplomado</span>
         </div>
         <h2 id="hero-title" data-hero-title>Comienza tu recorrido</h2>
         <p class="card__sub" data-hero-sub>Sesión 01 · Título pendiente de confirmar</p>
@@ -108,10 +107,10 @@
             <strong>Progreso del módulo</strong>
             <span class="card__percent" data-progress-percent>0%</span>
           </div>
-          <div class="progress" role="progressbar" aria-label="Progreso del módulo de evaluación" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" data-progress>
+          <div class="progress" role="progressbar" aria-label="Progreso en las 15 sesiones" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0" data-progress>
             <div class="progress__fill" data-progress-fill></div>
           </div>
-          <p class="small on-dark-soft" data-progress-text>0 de 10 sesiones completadas · Demostración local</p>
+          <p class="small on-dark-soft" data-progress-text>0 de 15 sesiones completadas · Demostración local</p>
           <a class="btn btn--primary" id="btn-continuar-curso" href="sesiones/sesion-01.html" data-continue>Continuar mi curso<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
         </div>
       </section>
@@ -144,36 +143,36 @@
         <a class="btn btn--primary" id="btn-explorar-mapa" href="mapa-curso.html">Explorar el mapa<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
       </div>
       <ul class="module-grid">
-      <li><div class="module-card">
+      <li><a class="module-card module-card--link" href="modulo-evaluacion.html#modulo-1">
         <p class="eyebrow">Módulo 01</p>
         <h3>Posicionamiento crítico frente a la IA en educación</h3>
-        <p class="module-card__meta">Semanas 1–3 · 15 h</p>
-        <span class="module-card__status pill pill--soon">Disponible próximamente</span>
-      </div></li>
-      <li><div class="module-card">
+        <p class="module-card__meta">Semanas 1–3 · 15 h · Sesiones 1–3</p>
+        <span class="module-card__status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>Ver sesiones</span>
+      </a></li>
+      <li><a class="module-card module-card--link" href="modulo-evaluacion.html#modulo-2">
         <p class="eyebrow">Módulo 02</p>
         <h3>Mediación pedagógica y didáctica con IA</h3>
-        <p class="module-card__meta">Semanas 4–6 · 15 h</p>
-        <span class="module-card__status pill pill--soon">Disponible próximamente</span>
-      </div></li>
+        <p class="module-card__meta">Semanas 4–6 · 15 h · Sesiones 4–6</p>
+        <span class="module-card__status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>Ver sesiones</span>
+      </a></li>
       <li><a class="module-card module-card--active" href="modulo-evaluacion.html">
         <p class="eyebrow">Módulo 03</p>
         <h3>Diseño curricular, evaluación y gestión académica con IA</h3>
-        <p class="module-card__meta">Semanas 7–9 · 15 h · 10 sesiones</p>
+        <p class="module-card__meta">Semanas 7–9 · 15 h · Sesiones 7–9</p>
         <span class="module-card__status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>Ver sesiones</span>
       </a></li>
-      <li><div class="module-card">
+      <li><a class="module-card module-card--link" href="modulo-evaluacion.html#modulo-4">
         <p class="eyebrow">Módulo 04</p>
         <h3>Ética, soberanía tecnológica y bienestar docente</h3>
-        <p class="module-card__meta">Semanas 10–11 · 10 h</p>
-        <span class="module-card__status pill pill--soon">Disponible próximamente</span>
-      </div></li>
-      <li><div class="module-card">
+        <p class="module-card__meta">Semanas 10–11 · 10 h · Sesiones 10–11</p>
+        <span class="module-card__status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>Ver sesiones</span>
+      </a></li>
+      <li><a class="module-card module-card--link" href="modulo-evaluacion.html#modulo-5">
         <p class="eyebrow">Módulo 05</p>
         <h3>Proyecto aplicado: diseño e implementación</h3>
-        <p class="module-card__meta">Semanas 12–15 · 35 h</p>
-        <span class="module-card__status pill pill--soon">Disponible próximamente</span>
-      </div></li>
+        <p class="module-card__meta">Semanas 12–15 · 35 h · Sesiones 12–15</p>
+        <span class="module-card__status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>Ver sesiones</span>
+      </a></li>
       </ul>
     </section>
   </div>
@@ -185,7 +184,7 @@
       <ul class="site-footer__links">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="mapa-curso.html">Mapa del curso</a></li>
-        <li><a href="modulo-evaluacion.html">Módulo de evaluación</a></li>
+        <li><a href="modulo-evaluacion.html">Sesiones del diplomado</a></li>
         <li><a href="bitacora.html">Mi bitácora</a></li>
         <li><a href="nodo-ia.html">Nodo IA</a></li>
       </ul>
@@ -193,8 +192,8 @@
     <p class="site-footer__note">Prototipo académico del equipo LXD para el diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia. El progreso y la bitácora son una demostración local: se guardan solo en este navegador y no son una entrega académica.</p>
   </div>
 </footer>
-<script src="js/datos-demo.js?v=20261110f"></script>
-<script src="js/main.js?v=20261110f"></script>
-<script src="js/extras.js?v=20261110f"></script>
+<script src="js/datos-demo.js?v=20261111f"></script>
+<script src="js/main.js?v=20261111f"></script>
+<script src="js/extras.js?v=20261111f"></script>
 </body>
 </html>

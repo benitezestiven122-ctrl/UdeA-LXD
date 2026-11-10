@@ -50,7 +50,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Geist:wght@600;700&amp;family=Jost:wght@400;500;600&amp;display=swap">
-<link rel="stylesheet" href="../css/estilos.css?v=20261110f">
+<link rel="stylesheet" href="../css/estilos.css?v=20261111f">
 <link rel="icon" type="image/svg+xml" href="../assets/imagenes/favicon.svg">
 </head>
 <body data-root="../" data-page="sesion" data-session="4">
@@ -66,7 +66,6 @@
       <select id="perfil" data-profile>
         <option value="guiado">Docente · paso a paso</option>
         <option value="libre">Docente · exploración libre</option>
-        <option value="coordinador">Coordinador pedagógico</option>
       </select>
     </div>
   </div>
@@ -89,10 +88,10 @@
 </nav>
 <main id="contenido" class="page-main" tabindex="-1">
   <div class="container">
-    <nav aria-label="Migas de navegación"><ol class="breadcrumbs"><li><a href="../mapa-curso.html">Mapa del curso</a></li><li><a href="../modulo-evaluacion.html">Módulo de evaluación</a></li><li><span aria-current="page">Sesión 04</span></li></ol></nav>
+    <nav aria-label="Migas de navegación"><ol class="breadcrumbs"><li><a href="../mapa-curso.html">Mapa del curso</a></li><li><a href="../modulo-evaluacion.html">Sesiones del diplomado</a></li><li><span aria-current="page">Sesión 04</span></li></ol></nav>
     <div class="session-layout">
       <aside class="session-sidebar" aria-labelledby="lista-sesiones">
-        <p class="session-sidebar__title" id="lista-sesiones">Sesiones del módulo</p>
+        <p class="session-sidebar__title" id="lista-sesiones">Sesiones del diplomado</p>
         <ol class="session-nav">
           <li><a href="sesion-01.html" data-nav-session="1">Sesión 01<span class="session-nav__state" data-nav-state></span></a></li>
           <li><a href="sesion-02.html" data-nav-session="2">Sesión 02<span class="session-nav__state" data-nav-state></span></a></li>
@@ -104,6 +103,11 @@
           <li><a href="sesion-08.html" data-nav-session="8">Sesión 08<span class="session-nav__state" data-nav-state></span></a></li>
           <li><a href="sesion-09.html" data-nav-session="9">Sesión 09<span class="session-nav__state" data-nav-state></span></a></li>
           <li><a href="sesion-10.html" data-nav-session="10">Sesión 10<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-11.html" data-nav-session="11">Sesión 11<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-12.html" data-nav-session="12">Sesión 12<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-13.html" data-nav-session="13">Sesión 13<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-14.html" data-nav-session="14">Sesión 14<span class="session-nav__state" data-nav-state></span></a></li>
+          <li><a href="sesion-15.html" data-nav-session="15">Sesión 15<span class="session-nav__state" data-nav-state></span></a></li>
         </ol>
       </aside>
 
@@ -121,35 +125,65 @@
           <option value="sesion-08.html">Sesión 08</option>
           <option value="sesion-09.html">Sesión 09</option>
           <option value="sesion-10.html">Sesión 10</option>
+          <option value="sesion-11.html">Sesión 11</option>
+          <option value="sesion-12.html">Sesión 12</option>
+          <option value="sesion-13.html">Sesión 13</option>
+          <option value="sesion-14.html">Sesión 14</option>
+          <option value="sesion-15.html">Sesión 15</option>
           </select>
         </div>
 
         <header class="session-head">
-          <p class="eyebrow">Sesión 04 de 10</p>
+          <div class="phase-track" role="img" aria-label="Fase 2 de 5 del diplomado"><span class="phase-track__step is-done">1</span><span class="phase-track__step is-current">2</span><span class="phase-track__step">3</span><span class="phase-track__step">4</span><span class="phase-track__step">5</span></div>
+          <p class="eyebrow">Sesión 04 de 15 &#183; Semana 4 &#183; Fase 2</p>
           <h1 id="sesion-titulo">Sesión 04</h1>
-          <p class="lead">Título pendiente de confirmar</p>
+          <p class="lead">La mediación pedagógica reconfigurada: docente – IA – estudiante</p>
           <div class="row">
             <span class="pill pill--pending" data-session-pill>Pendiente</span>
-            <span class="pill pill--soon">Contenido pendiente de confirmar</span>
+            <span class="pill pill--phase pill--phase-2">Módulo 2 &#183; Mediación pedagógica y didáctica</span>
+            <span class="pill pill--hito">Hito 1 · Elección de modalidad y contexto</span>
           </div>
         </header>
 
         <section class="session-section" aria-labelledby="obj-4">
-          <h2 id="obj-4">Objetivo</h2>
-          <p class="text-secondary">Disponible próximamente.</p>
+          <h2 id="obj-4">Objetivo de aprendizaje</h2>
+          <p class="session-objective">Comprender cómo la IA generativa reconfigura la relación entre docente, estudiante y conocimiento, analizando la tensión didáctica/matética, el construccionismo y la mediación pedagógica como proceso que ningún sistema puede sustituir.</p>
+        </section>
+
+        <section class="session-section" aria-labelledby="din-4">
+          <h2 id="din-4">Dinámica de la sesión</h2>
+          <ul class="plain-list" data-glossary><li>Sesión de reflexión sobre la práctica propia con andamiaje conceptual.</li><li>Presentación dialogada a partir de una clase real del equipo, seguida de análisis en triadas.</li><li>Abre la Fase 2 y el proyecto final (Hito 1).</li></ul>
+          
+        </section>
+
+        <section class="session-section" aria-labelledby="top-4">
+          <h2 id="top-4">Tópicos centrales</h2>
+          <p class="small text-secondary">Toca cada tarjeta para ver el detalle.</p>
+          <ul class="topic-cards"><li><button type="button" class="topic-card" aria-pressed="false" data-topic><span class="topic-card__inner"><span class="topic-card__face topic-card__front"><span class="topic-card__num">01</span><strong>Didáctica vs. matética:</strong><span class="topic-card__hint">Ver detalle</span></span><span class="topic-card__face topic-card__back"><strong>Didáctica vs. matética:</strong> el arte de enseñar frente al arte de aprender.<span class="topic-card__hint">Volver</span></span></span></button></li><li><button type="button" class="topic-card" aria-pressed="false" data-topic><span class="topic-card__inner"><span class="topic-card__face topic-card__front"><span class="topic-card__num">02</span><strong>Construccionismo (Papert):</strong><span class="topic-card__hint">Ver detalle</span></span><span class="topic-card__face topic-card__back"><strong>Construccionismo (Papert):</strong> qué construye realmente el estudiante con IA.<span class="topic-card__hint">Volver</span></span></span></button></li><li><button type="button" class="topic-card" aria-pressed="false" data-topic><span class="topic-card__inner"><span class="topic-card__face topic-card__front"><span class="topic-card__num">03</span><strong>Mediación como proceso cultural</strong><span class="topic-card__hint">Ver detalle</span></span><span class="topic-card__face topic-card__back"><strong>Mediación como proceso cultural</strong> (Gutiérrez y Prieto); roles piloto–copiloto–interfaz.<span class="topic-card__hint">Volver</span></span></span></button></li></ul>
+        </section>
+
+        <section class="session-section" aria-labelledby="semana-4">
+          <h2 id="semana-4">Tu semana: 5 horas y un artefacto</h2>
+          <ol class="week" data-week="4"><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="0"><span class="week__dot" aria-hidden="true">1</span><span class="week__name">Encuentro sincrónico</span><span class="week__time">2 h</span><span class="week__desc">Participa en la dinámica: casos, taller, conversatorio o triadas, con material propio.</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="1"><span class="week__dot" aria-hidden="true">2</span><span class="week__name">Lectura guiada</span><span class="week__time">1 h</span><span class="week__desc">Lee el texto de la semana (por ejemplo Selwyn, Crawford o Papert).</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="2"><span class="week__dot" aria-hidden="true">3</span><span class="week__name">Exploración con IA</span><span class="week__time">1 h</span><span class="week__desc">Prueba una herramienta o rediseña con material propio, y registra lo que ocurrió.</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="3"><span class="week__dot" aria-hidden="true">4</span><span class="week__name">Escritura del artefacto</span><span class="week__time">1 h</span><span class="week__desc">Escribe el artefacto: nota, bitácora, matriz, rúbrica o plan.</span></button></li><li class="week__step"><button type="button" class="week__btn" aria-pressed="false" data-week-step="4"><span class="week__dot" aria-hidden="true">5</span><span class="week__name">Entrega y Caja</span><span class="week__time">Al cerrar la semana</span><span class="week__desc">Entrega y ve cómo el artefacto se suma a su Caja de herramientas.</span></button></li></ol>
+          <p class="small text-secondary" data-week-status role="status">Marca cada paso cuando lo completes. Se guarda solo en este navegador.</p>
         </section>
 
         <section class="session-section" aria-labelledby="rec-4">
           <h2 id="rec-4">Contenido y recursos</h2>
-          <div class="resource-frame"><p>Recurso de la sesión: Disponible próximamente</p></div>
+          <div class="resource-frame"><p>Lectura guiada y materiales de la sesión: Disponible próximamente</p></div>
         </section>
 
         <section class="session-section" id="actividad" aria-labelledby="act-4">
           <h2 id="act-4">Actividad de la sesión 04</h2>
-          <p class="text-secondary">Disponible próximamente.</p>
+          <div class="artifact">
+            <p class="eyebrow">Artefacto semanal &#183; Entrada 4 de 15</p>
+            <h3 class="artifact__title">Entrada 4 · Bitácora didáctica (1) + Hito 1 (elección de modalidad)</h3>
+            <p class="artifact__desc">La bitácora (descripción + análisis) operacionaliza la práctica reflexiva. En el Hito 1 cada docente elige su modalidad de proyecto y formula su dilema.</p>
+          </div>
+          <p class="small text-secondary">Contenido tomado de la presentación sintética del diplomado (equipo LXD).</p>
         </section>
 
-        <section class="session-section panel panel--soft" aria-labelledby="bit-4">
+<section class="session-section panel panel--soft" aria-labelledby="bit-4">
           <h2 id="bit-4">Mi bitácora</h2>
           <p>Registra lo que vas descubriendo en esta sesión.</p>
           <div><a class="btn btn--secondary" href="../bitacora.html?sesion=4">Abrir mi bitácora<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a></div>
@@ -157,7 +191,7 @@
 
         <div class="session-controls">
           <div class="session-controls__group">
-            <a class="btn btn--secondary" href="../modulo-evaluacion.html">Volver al módulo</a>
+            <a class="btn btn--secondary" href="../modulo-evaluacion.html">Ver todas las sesiones</a>
             <button type="button" class="btn btn--secondary" data-toggle-complete>Marcar como completada</button>
           </div>
           <div class="session-controls__group">
@@ -177,7 +211,7 @@
       <ul class="site-footer__links">
         <li><a href="../index.html">Inicio</a></li>
         <li><a href="../mapa-curso.html">Mapa del curso</a></li>
-        <li><a href="../modulo-evaluacion.html">Módulo de evaluación</a></li>
+        <li><a href="../modulo-evaluacion.html">Sesiones del diplomado</a></li>
         <li><a href="../bitacora.html">Mi bitácora</a></li>
         <li><a href="../nodo-ia.html">Nodo IA</a></li>
       </ul>
@@ -185,8 +219,8 @@
     <p class="site-footer__note">Prototipo académico del equipo LXD para el diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia. El progreso y la bitácora son una demostración local: se guardan solo en este navegador y no son una entrega académica.</p>
   </div>
 </footer>
-<script src="../js/datos-demo.js?v=20261110f"></script>
-<script src="../js/main.js?v=20261110f"></script>
-<script src="../js/extras.js?v=20261110f"></script>
+<script src="../js/datos-demo.js?v=20261111f"></script>
+<script src="../js/main.js?v=20261111f"></script>
+<script src="../js/extras.js?v=20261111f"></script>
 </body>
 </html>

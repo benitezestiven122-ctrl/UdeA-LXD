@@ -291,87 +291,739 @@
   }
 
   /* ---------- Nodo IA (HU-01) ---------- */
-  function allCases() {
-    return D.casos.map(function (c) { return c; }).concat(state.nodo.propias || []);
+  /* ---------- Nodo IA: red 3D, lector deslizable y nodos nuevos ---------- */
+  var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TIPOS = { proyecto: 'Proyecto', paper: 'Paper', bitacora: 'Bitácora' };
+  var ICON_BACK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4M10 6l-6 6 6 6"></path></svg>';
+  function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+  function norm(o, tipo) {
+    var n = {};
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) n[k] = o[k];
+    n.tipo = o.tipo || tipo;
+    n.texto = o.texto || [];
+    n.rel = o.rel || [];
+    n.comentarios = o.comentarios || [];
+    return n;
   }
+  function nodos() {
+    var list = [];
+    D.casos.forEach(function (c) { list.push(norm(c, 'proyecto')); });
+    (D.papers || []).forEach(function (p) { list.push(norm(p, 'paper')); });
+    (D.bitacorasEjemplo || []).forEach(function (b) { list.push(norm(b, 'bitacora')); });
+    (state.nodo.propias || []).forEach(function (p) { list.push(norm(p, 'proyecto')); });
+    return list;
+  }
+  function allCases() { return nodos(); }
   function commentsOf(c) {
     return (c.comentarios || []).concat(state.nodo.comentarios[c.id] || []);
   }
-  function renderNodoList() {
-    var list = document.querySelector('[data-nodo-lista]');
-    var filters = document.querySelector('[data-nodo-filtros]');
-    var empty = document.querySelector('[data-nodo-vacio]');
-    if (!list) return;
-    var active = 'Todas';
-    function draw() {
-      var cases = allCases();
-      var used = ['Todas'];
-      cases.forEach(function (c) { if (used.indexOf(c.disciplina) < 0) used.push(c.disciplina); });
-      filters.innerHTML = '';
-      used.forEach(function (d) {
-        var b = el('button', 'chip');
-        b.type = 'button';
-        b.textContent = d;
-        b.setAttribute('aria-pressed', String(d === active));
-        b.addEventListener('click', function () { active = d; draw(); track('nodo_filtro'); });
-        filters.appendChild(b);
-      });
-      var shown = cases.filter(function (c) { return active === 'Todas' || c.disciplina === active; });
-      list.innerHTML = shown.map(function (c) {
-        var n = commentsOf(c).length;
-        return '<li><article class="case-card">' +
-          '<div class="row"><span class="pill pill--light-border">' + esc(c.disciplina) + '</span><span class="pill pill--pending">' + esc(c.tema) + '</span></div>' +
-          '<h3><a href="' + root + 'nodo-ia-caso.html?caso=' + encodeURIComponent(c.id) + '">' + esc(c.titulo) + '</a></h3>' +
-          '<p>' + esc(c.resumen) + '</p>' +
-          '<div class="case-card__foot"><span class="small text-secondary">' + (c.propia ? 'Tu experiencia · Demostración local' : 'Caso de demostración') + ' · ' + n + (n === 1 ? ' comentario' : ' comentarios') + '</span>' +
-          '<span class="case-card__go" aria-hidden="true">Leer caso' + ICON_ARROW + '</span></div>' +
-          '</article></li>';
-      }).join('');
-      empty.hidden = shown.length > 0;
-    }
-    draw();
 
-    var form = document.querySelector('[data-nodo-form]');
-    if (!form) return;
-    var sel = form.querySelector('[data-nodo-disciplina]');
-    sel.innerHTML = D.disciplinas.map(function (d) { return '<option>' + esc(d) + '</option>'; }).join('');
-    var msg = form.querySelector('[data-nodo-msg]');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var titulo = form.querySelector('[name="titulo"]');
-      var desc = form.querySelector('[name="descripcion"]');
-      msg.hidden = false;
-      if (!titulo.value.trim() || !desc.value.trim()) {
-        msg.className = 'notice notice--error';
-        msg.textContent = 'Escribe un título y cuenta tu experiencia antes de publicar.';
-        (titulo.value.trim() ? desc : titulo).focus();
-        track('nodo_error_vacio');
-        return;
+  // Ilustraciones de ejemplo (SVG generado con los colores del sitio).
+  function illus(kind) {
+    var bg = cssVar('--color-primary-dark'), a = cssVar('--color-primary-deep'), b = cssVar('--color-primary-light'), c = cssVar('--color-cta'), w = cssVar('--color-bg');
+    var body = '';
+    if (kind === 'rubrica') {
+      for (var r = 0; r < 4; r++) for (var q = 0; q < 4; q++) {
+        body += '<rect x="' + (60 + q * 122) + '" y="' + (70 + r * 64) + '" width="110" height="52" rx="8" fill="' + (r === 0 ? b : (q === (r + 1) % 4 ? c : (q % 2 ? a : w))) + '"/>';
       }
+    } else if (kind === 'barras') {
+      [120, 200, 90, 240, 170].forEach(function (h, i) { body += '<rect x="' + (90 + i * 90) + '" y="' + (320 - h) + '" width="56" height="' + h + '" rx="6" fill="' + (i === 3 ? c : b) + '"/>'; });
+      body += '<rect x="60" y="322" width="480" height="4" fill="' + w + '"/>';
+    } else {
+      [[150, 180, 62, b], [300, 130, 80, c], [450, 200, 56, b], [230, 280, 44, w], [390, 290, 50, c]].forEach(function (p) {
+        body += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + p[2] + '" fill="' + p[3] + '" opacity=".88"/>';
+      });
+      body += '<path d="M150 180 300 130 450 200 390 290 230 280z" fill="none" stroke="' + w + '" stroke-width="3" opacity=".6"/>';
+    }
+    return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380"><rect width="600" height="380" fill="' + bg + '"/>' + body + '</svg>');
+  }
+  var WAVE = '';
+  for (var wv = 0; wv < 28; wv++) WAVE += '<span style-h="' + (20 + Math.round(Math.abs(Math.sin(wv * 1.7)) * 70)) + '"></span>';
+  function mediaHTML(media) {
+    if (!media || !media.length) return '';
+    return '<div class="media-grid">' + media.map(function (m) {
+      var cap = '<figcaption>' + esc(m.pie || m.nombre || '') + (m.ejemplo ? ' · Ejemplo' : '') + '</figcaption>';
+      if (m.tipo === 'imagen') return '<figure class="media-item"><img src="' + esc(m.src || illus(m.ilus)) + '" alt="' + esc(m.alt || m.pie || m.nombre || 'Imagen') + '" loading="lazy">' + cap + '</figure>';
+      if (m.tipo === 'video') return '<figure class="media-item"><div class="media-mock" role="img" aria-label="Video' + (m.ejemplo ? ' de ejemplo, no reproducible' : ' adjunto; en esta demostración solo se guarda el nombre') + '"><span class="media-play"></span><span class="media-dur">' + esc(m.duracion || 'Video') + '</span></div>' + cap + '</figure>';
+      return '<figure class="media-item"><div class="media-mock media-mock--audio" role="img" aria-label="Nota de voz' + (m.ejemplo ? ' de ejemplo, no reproducible' : ' adjunta; en esta demostración solo se guarda el nombre') + '"><span class="media-wave">' + WAVE + '</span><span class="media-dur">' + esc(m.duracion || 'Audio') + '</span></div>' + cap + '</figure>';
+    }).join('') + '</div>';
+  }
+  /* Multimedia embebida de ejemplo: visor de documento para papers y
+     reproductor de video para proyectos. Si un nodo trae `embed` con una URL
+     https real (YouTube no listado, Drive, PDF), se usa un <iframe>. */
+  function xmlEsc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]; }); }
+  function wrapWords(text, max) {
+    var lines = [], cur = '';
+    String(text).split(' ').forEach(function (w) {
+      if ((cur + ' ' + w).trim().length > max) { lines.push(cur.trim()); cur = w; } else cur += ' ' + w;
+    });
+    if (cur.trim()) lines.push(cur.trim());
+    return lines;
+  }
+  function pdfPage(n, page) {
+    var ink = cssVar('--color-text'), soft = cssVar('--color-border'), acc = cssVar('--color-primary-deep'), cta = cssVar('--color-cta'), paper = cssVar('--color-bg');
+    var s = '<rect width="420" height="560" fill="' + paper + '"/><rect x="0" y="0" width="420" height="10" fill="' + acc + '"/>';
+    var y = 60;
+    if (page === 1) {
+      wrapWords(n.titulo, 34).slice(0, 4).forEach(function (l) { s += '<text x="40" y="' + y + '" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="' + ink + '">' + xmlEsc(l) + '</text>'; y += 24; });
+      s += '<text x="40" y="' + (y + 6) + '" font-family="Arial,sans-serif" font-size="11" fill="' + acc + '">' + xmlEsc((n.autores || '') + ' · ' + (n.anio || '')) + '</text>';
+      y += 34;
+      s += '<text x="40" y="' + y + '" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="' + ink + '">RESUMEN</text>';
+      y += 18;
+    } else {
+      s += '<text x="40" y="44" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="' + acc + '">' + (page === 2 ? 'INTRODUCCIÓN' : (page === 3 ? 'RESULTADOS' : 'DISCUSIÓN')) + '</text>';
+      y = 66;
+    }
+    for (var i = 0; y < 520; i++) {
+      if (page === 3 && i === 6) {
+        [60, 110, 80, 140, 95].forEach(function (h, k) { s += '<rect x="' + (60 + k * 62) + '" y="' + (y + 150 - h) + '" width="40" height="' + h + '" rx="4" fill="' + (k === 3 ? cta : acc) + '" opacity=".85"/>'; });
+        s += '<rect x="40" y="' + (y + 152) + '" width="340" height="2" fill="' + soft + '"/>';
+        y += 176; continue;
+      }
+      var w = i % 7 === 6 ? 180 : 340 - (i * 37 % 60);
+      s += '<rect x="40" y="' + y + '" width="' + w + '" height="7" rx="3" fill="' + soft + '"/>';
+      y += i % 7 === 6 ? 24 : 15;
+    }
+    s += '<text x="210" y="545" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="' + acc + '">' + page + '</text>';
+    return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560">' + s + '</svg>');
+  }
+  var PDF_PAGES = 4;
+  function embedsHTML(n) {
+    if (n.embed && /^https:\/\//i.test(n.embed)) {
+      return '<figure class="embed"><div class="embed__frame"><iframe src="' + esc(n.embed) + '" title="' + esc(n.titulo) + '" loading="lazy" allowfullscreen></iframe></div></figure>';
+    }
+    if (n.propia) return '';
+    if (n.tipo === 'paper') {
+      var pages = '';
+      for (var p = 1; p <= PDF_PAGES; p++) pages += '<img class="pdf__page" src="' + pdfPage(n, p) + '" alt="Página ' + p + ' del documento (vista de ejemplo)"' + (p > 1 ? ' hidden' : '') + '>';
+      return '<figure class="embed embed--pdf" data-pdf>' +
+        '<div class="pdf__bar"><span class="pdf__icon" aria-hidden="true">PDF</span><span class="pdf__name">' + esc(n.titulo) + '</span>' +
+        '<span class="pdf__nav"><button type="button" class="pdf__btn" data-pdf-step="-1" aria-label="Página anterior">‹</button><span data-pdf-num aria-live="polite">1 / ' + PDF_PAGES + '</span><button type="button" class="pdf__btn" data-pdf-step="1" aria-label="Página siguiente">›</button></span></div>' +
+        '<div class="pdf__viewport">' + pages + '</div>' +
+        '<figcaption>Vista de ejemplo del documento embebido. Aquí va el PDF real (enlace público o Drive con «Cualquier persona con el enlace»).</figcaption></figure>';
+    }
+    if (n.tipo === 'proyecto') {
+      var kind = { Humanidades: 'rubrica', Ciencias: 'barras' }[n.disciplina] || 'aula';
+      var chapters = ['Presentación del reto', 'Trabajo en equipos', 'Cierre y acuerdos'];
+      return '<figure class="embed embed--video" data-video>' +
+        '<div class="video">' +
+        '<img class="video__poster" src="' + illus(kind) + '" alt="">' +
+        '<span class="video__badge">Video del aula · 3:12</span>' +
+        '<button type="button" class="video__play" data-video-play aria-label="Reproducir el video de ejemplo"><span aria-hidden="true"></span></button>' +
+        '<p class="video__note" data-video-note hidden>Vista de ejemplo: aquí se reproduce el video real (YouTube no listado o archivo .mp4).</p>' +
+        '<div class="video__controls"><button type="button" class="video__ctl" data-video-play aria-label="Reproducir o pausar">▶</button>' +
+        '<span class="video__time" data-video-time>0:00 / 3:12</span><span class="video__bar"><span class="video__fill" data-video-fill></span></span></div>' +
+        '</div>' +
+        '<ol class="video__chapters">' + chapters.map(function (c, i) { return '<li><span>' + ['0:00', '1:05', '2:20'][i] + '</span>' + esc(c) + '</li>'; }).join('') + '</ol>' +
+        '<figcaption>Ejemplo de video embebido en un proyecto.</figcaption></figure>';
+    }
+    return '';
+  }
+  // Controles de los embeds (sirven en el lector, en el panel lateral y en la página del caso).
+  document.addEventListener('click', function (e) {
+    var st = e.target.closest('[data-pdf-step]');
+    if (st) {
+      var box = st.closest('[data-pdf]'), imgs = box.querySelectorAll('.pdf__page'), cur = 0;
+      Array.prototype.forEach.call(imgs, function (im, i) { if (!im.hidden) cur = i; });
+      var nx = Math.max(0, Math.min(imgs.length - 1, cur + Number(st.getAttribute('data-pdf-step'))));
+      Array.prototype.forEach.call(imgs, function (im, i) { im.hidden = i !== nx; });
+      box.querySelector('[data-pdf-num]').textContent = (nx + 1) + ' / ' + imgs.length;
+      track('embed_pdf_pagina');
+      return;
+    }
+    var pl = e.target.closest('[data-video-play]');
+    if (pl) {
+      var v = pl.closest('[data-video]');
+      var on = !v.classList.contains('is-playing');
+      v.classList.toggle('is-playing', on);
+      v.querySelector('[data-video-note]').hidden = !on;
+      v.querySelector('.video__ctl').textContent = on ? '❚❚' : '▶';
+      if (on && !v._timer) {
+        var sec = v._sec || 0;
+        v._timer = window.setInterval(function () {
+          sec = (sec + 1) % 193; v._sec = sec;
+          v.querySelector('[data-video-time]').textContent = Math.floor(sec / 60) + ':' + S.pad(sec % 60) + ' / 3:12';
+          v.querySelector('[data-video-fill]').style.setProperty('--p', (sec / 192 * 100) + '%');
+        }, 1000);
+      } else if (!on) { window.clearInterval(v._timer); v._timer = null; }
+      track('embed_video_play');
+    }
+  });
+
+  function bindWaves(scope) {
+    Array.prototype.forEach.call((scope || document).querySelectorAll('[style-h]'), function (s) {
+      s.style.setProperty('--h', s.getAttribute('style-h') + '%');
+      s.removeAttribute('style-h');
+    });
+  }
+
+  function nodeHTML(n) {
+    var meta = n.tipo === 'paper'
+      ? '<p class="node-meta">' + esc(n.autores) + ' (' + esc(n.anio) + ') · <em>' + esc(n.fuente) + '</em></p>'
+      : (n.autor ? '<p class="node-meta">' + esc(n.autor) + (n.sesion ? ' · ' + esc(n.sesion) : '') + '</p>' : '');
+    var nota = n.propia ? 'Tu aporte · Demostración local' :
+      (n.tipo === 'paper' ? 'Referencia real · resumen de demostración redactado con IA. Verifica la fuente antes de citarla.' :
+        (n.tipo === 'bitacora' ? 'Bitácora de ejemplo · Demostración' : 'Caso de demostración'));
+    return '<div class="row"><span class="pill node-pill node-pill--' + n.tipo + '">' + TIPOS[n.tipo] + '</span>' +
+      '<span class="pill pill--light-border">' + esc(n.disciplina) + '</span><span class="pill pill--pending">' + esc(n.tema) + '</span></div>' +
+      '<h2 class="node-title">' + esc(n.titulo) + '</h2>' + meta +
+      '<p class="lead">' + esc(n.resumen) + '</p>' +
+      '<div class="node-text" data-glossary>' +
+      n.texto.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
+      (n.partes ? n.partes.map(function (p) { return '<h3 class="saved-label">' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p>'; }).join('') : '') +
+      (n.hallazgos ? '<h3 class="saved-label">Ideas clave</h3><ul class="plain-list">' + n.hallazgos.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' : '') +
+      '</div>' +
+      mediaHTML(n.media) + embedsHTML(n) +
+      (n.enlace ? '<p><a class="link-button" href="' + esc(n.enlace) + '" target="_blank" rel="noopener">Abrir el enlace del aporte</a></p>' : '') +
+      (n.pregunta ? '<div class="panel panel--soft"><p class="eyebrow">Pregunta para conversar</p><p>' + esc(n.pregunta) + '</p></div>' : '') +
+      '<p class="small text-secondary">' + esc(nota) + '</p>';
+  }
+
+  /* Lector deslizable: scroll o swipe; flechas en el teclado. */
+  var feed = null;
+  function openFeed(list, start) {
+    if (feed) feed.close();
+    var last = document.activeElement;
+    var wrap = el('div', 'feed');
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-label', 'Contenidos de Nodo IA');
+    var bar = el('div', 'feed__bar',
+      '<button type="button" class="btn btn--secondary" id="btn-volver-red" data-back>' + ICON_BACK + 'Volver a la red</button>' +
+      '<p class="feed__count" aria-live="polite"></p>' +
+      '<div class="feed__nav"><button type="button" class="feed__arrow" data-step="-1" aria-label="Contenido anterior">↑</button><button type="button" class="feed__arrow" data-step="1" aria-label="Contenido siguiente">↓</button></div>');
+    var lane = el('div', 'feed__lane');
+    list.forEach(function (n, i) {
+      var s = el('article', 'feed__slide');
+      s.tabIndex = -1;
+      s.setAttribute('aria-label', (i + 1) + ' de ' + list.length + ': ' + n.titulo);
+      s.innerHTML = '<div class="feed__card">' + nodeHTML(n) +
+        '<div class="feed__actions">' +
+        '<button type="button" class="btn btn--primary" id="btn-crear-nodo-' + i + '" data-crear>Crea tu propio nodo' + ICON_ARROW + '</button>' +
+        '<a class="btn btn--secondary" href="' + root + 'nodo-ia-caso.html?caso=' + encodeURIComponent(n.id) + '">Comentar y reconocer</a>' +
+        '<button type="button" class="link-button" data-back>Volver a la red</button>' +
+        '</div>' + (i < list.length - 1 ? '<p class="feed__next small">Siguiente: ' + esc(list[i + 1].titulo) + ' ↓</p>' : '<p class="feed__next small">Llegaste al último nodo.</p>') +
+        '</div>';
+      lane.appendChild(s);
+    });
+    wrap.appendChild(bar);
+    wrap.appendChild(lane);
+    document.body.appendChild(wrap);
+    document.body.classList.add('has-feed');
+    bindGlossary(wrap);
+    bindWaves(wrap);
+    var count = bar.querySelector('.feed__count');
+    var cur = -1;
+    function mark(i) {
+      if (i === cur) return;
+      if (cur >= 0) track('nodo_siguiente');
+      cur = i;
+      count.textContent = (i + 1) + ' de ' + list.length + ' · ' + TIPOS[list[i].tipo];
+    }
+    function go(i, smooth) {
+      i = Math.max(0, Math.min(list.length - 1, i));
+      var s = lane.children[i];
+      lane.scrollTo({ top: s.offsetTop - lane.offsetTop, behavior: smooth && !REDUCE ? 'smooth' : 'auto' });
+      s.focus({ preventScroll: true });
+      mark(i);
+    }
+    lane.addEventListener('scroll', function () {
+      var mid = lane.scrollTop + lane.clientHeight / 3, idx = 0;
+      Array.prototype.forEach.call(lane.children, function (s, k) { if (s.offsetTop - lane.offsetTop <= mid) idx = k; });
+      mark(idx);
+    }, { passive: true });
+    function onKey(e) {
+      if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(cur + 1, true); }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(cur - 1, true); }
+      else if (e.key === 'Escape') api.close();
+    }
+    var api = {
+      close: function () {
+        document.removeEventListener('keydown', onKey);
+        wrap.remove();
+        document.body.classList.remove('has-feed');
+        feed = null;
+        if (last && last.focus) last.focus();
+      }
+    };
+    wrap.addEventListener('click', function (e) {
+      var st = e.target.closest('[data-step]');
+      if (st) { go(cur + Number(st.getAttribute('data-step')), true); return; }
+      if (e.target.closest('[data-back]')) { api.close(); return; }
+      if (e.target.closest('[data-crear]')) { api.close(); openAddNode(); }
+    });
+    document.addEventListener('keydown', onKey);
+    feed = api;
+    track('nodo_abierto');
+    window.requestAnimationFrame(function () { go(start, false); });
+    return api;
+  }
+
+  function downscale(file, cb) {
+    var r = new FileReader();
+    r.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var k = Math.min(1, 640 / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', 0.72));
+      };
+      img.onerror = function () { cb(null); };
+      img.src = r.result;
+    };
+    r.onerror = function () { cb(null); };
+    r.readAsDataURL(file);
+  }
+
+  /* Añadir nodo (panel lateral). */
+  function openAddNode() {
+    var f = el('form', 'form-stack',
+      '<div class="field"><label for="nn-tipo">Tipo de aporte</label><select id="nn-tipo"><option value="proyecto">Proyecto o experiencia de aula</option><option value="bitacora">Bitácora compartida</option><option value="paper">Paper o lectura recomendada</option></select></div>' +
+      '<div class="field"><label for="nn-titulo">Título</label><input type="text" id="nn-titulo" maxlength="120" autocomplete="off" data-hj-suppress></div>' +
+      '<div class="field"><label for="nn-disc">Disciplina</label><select id="nn-disc">' + D.disciplinas.map(function (d) { return '<option>' + esc(d) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="nn-tema">Tema</label><input type="text" id="nn-tema" placeholder="Evaluación, ética, planeación…" autocomplete="off" data-hj-suppress></div>' +
+      '<div class="field"><label for="nn-desc">Cuéntanos de qué se trata</label><textarea id="nn-desc" rows="5" data-hj-suppress></textarea></div>' +
+      '<div class="field"><label for="nn-link">Enlace (opcional)</label><input type="url" id="nn-link" placeholder="https://" autocomplete="off"></div>' +
+      '<div class="field"><span class="field__label">Imagen (opcional)</span><div class="file-picker"><input class="visually-hidden" type="file" id="nn-img" accept="image/*" tabindex="-1"><button type="button" class="btn btn--secondary" data-nn-pick>Examinar archivo</button><span class="file-picker__name" data-nn-name>Ninguna imagen</span></div></div>' +
+      '<p class="small text-secondary">No incluyas nombres de estudiantes ni datos personales. Tu nodo se guarda solo en este navegador.</p>' +
+      '<div class="form-actions"><button type="submit" class="btn btn--primary" id="btn-publicar-nodo">Publicar nodo</button></div>' +
+      '<p class="status-note" role="status" data-nn-msg></p>');
+    f.setAttribute('novalidate', '');
+    var img = null;
+    var input = f.querySelector('#nn-img');
+    f.querySelector('[data-nn-pick]').addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      f.querySelector('[data-nn-name]').textContent = 'Procesando…';
+      downscale(file, function (src) {
+        img = src ? { tipo: 'imagen', src: src, nombre: file.name, pie: file.name } : null;
+        f.querySelector('[data-nn-name]').textContent = src ? file.name : 'No pudimos leer la imagen.';
+      });
+    });
+    var drawer = openDrawer({ kicker: 'Nodo IA', title: 'Añadir un nodo', body: f });
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = f.querySelector('[data-nn-msg]');
+      var titulo = f.querySelector('#nn-titulo').value.trim();
+      var desc = f.querySelector('#nn-desc').value.trim();
+      var link = f.querySelector('#nn-link').value.trim();
+      if (!titulo || !desc) { msg.textContent = 'Escribe un título y cuéntanos de qué se trata.'; f.querySelector(titulo ? '#nn-desc' : '#nn-titulo').focus(); track('nodo_error_vacio'); return; }
+      if (link && !/^https:\/\//i.test(link)) { msg.textContent = 'El enlace debe empezar por https://'; f.querySelector('#nn-link').focus(); return; }
       var item = {
-        id: 'p' + Date.now(), propia: true,
-        disciplina: sel.value,
-        tema: form.querySelector('[name="tema"]').value.trim() || 'Sin tema',
-        claves: form.querySelector('[name="claves"]').value.trim(),
-        titulo: titulo.value.trim(),
-        resumen: desc.value.trim().slice(0, 160),
-        texto: [desc.value.trim()],
-        pregunta: '', comentarios: []
+        id: 'u' + Date.now(), propia: true, tipo: f.querySelector('#nn-tipo').value,
+        titulo: titulo, disciplina: f.querySelector('#nn-disc').value,
+        tema: f.querySelector('#nn-tema').value.trim() || 'Sin tema',
+        resumen: desc.length > 180 ? desc.slice(0, 177) + '…' : desc,
+        texto: desc.length > 180 ? [desc] : [], enlace: link, media: img ? [img] : [], autor: 'Tú', comentarios: []
       };
       state.nodo.propias.push(item);
-      if (S.save()) {
-        form.reset();
-        active = 'Todas';
-        draw();
-        msg.className = 'notice notice--success';
-        msg.textContent = 'Tu experiencia quedó publicada en este navegador. La encuentras arriba, en la lista.';
-        track('nodo_experiencia_publicada');
+      if (!S.save()) { state.nodo.propias.pop(); msg.textContent = 'No pudimos guardar tu nodo (puede que la imagen sea muy pesada). Inténtalo sin imagen.'; return; }
+      track('nodo_experiencia_publicada');
+      drawer.close();
+      if (S.redRebuild) S.redRebuild();
+      var list = nodos();
+      openFeed(list, list.length - 1);
+    });
+  }
+
+  /* Red 3D en canvas: arrastrar para girar, clic en un nodo para abrirlo. */
+  function renderRed() {
+    var stage = document.querySelector('[data-red]');
+    if (!stage) return;
+    var canvas = stage.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+    var tip = stage.querySelector('[data-red-tip]');
+    var listEl = document.querySelector('[data-red-lista]');
+    var countEl = document.querySelector('[data-red-count]');
+    var COL = { proyecto: cssVar('--color-primary-light'), paper: cssVar('--color-cta'), bitacora: cssVar('--color-teal-tint') };
+    var LINE = cssVar('--color-white');
+    var list = [], pts = [], edges = [], proj = [];
+    var rotY = 0.6, rotX = -0.3, auto = !REDUCE, drag = null, hover = -1, W = 0, H = 0, raf = 0;
+
+    function build() {
+      list = nodos();
+      var N = list.length, idx = {};
+      list.forEach(function (n, i) { idx[n.id] = i; });
+      pts = list.map(function (n, i) {
+        var y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * 2.39996;
+        var R = n.tipo === 'paper' ? 1 : (n.tipo === 'bitacora' ? 0.74 : 0.88);
+        return { x: Math.cos(th) * r * R, y: y * R, z: Math.sin(th) * r * R };
+      });
+      edges = [];
+      var seen = {};
+      function link(a, b) { var k = Math.min(a, b) + '-' + Math.max(a, b); if (a !== b && !seen[k]) { seen[k] = 1; edges.push([a, b]); } }
+      list.forEach(function (n, i) {
+        n.rel.forEach(function (id) { if (idx[id] != null) link(i, idx[id]); });
+        list.forEach(function (m, j) { if (j > i && m.tema.toLowerCase() === n.tema.toLowerCase()) link(i, j); });
+      });
+      list.forEach(function (n, i) {
+        if (edges.some(function (e) { return e[0] === i || e[1] === i; })) return;
+        var best = -1, bd = 9;
+        pts.forEach(function (p, j) { if (j === i) return; var d = Math.pow(p.x - pts[i].x, 2) + Math.pow(p.y - pts[i].y, 2) + Math.pow(p.z - pts[i].z, 2); if (d < bd) { bd = d; best = j; } });
+        if (best >= 0) link(i, best);
+      });
+      listEl.innerHTML = list.map(function (n, i) {
+        return '<li><button type="button" class="node-chip" data-open="' + i + '"><span class="dot dot--' + n.tipo + '" aria-hidden="true"></span>' +
+          '<span><strong>' + esc(n.titulo) + '</strong><span class="small text-secondary">' + TIPOS[n.tipo] + ' · ' + esc(n.tema) + (n.propia ? ' · Tu aporte' : '') + '</span></span></button></li>';
+      }).join('');
+      if (countEl) countEl.textContent = N + ' nodos · ' + edges.length + ' conexiones';
+    }
+    S.redRebuild = build;
+
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = r.width; H = r.height;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function project() {
+      var cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
+      var scale = Math.min(W, H) * 0.46, f = 2.8;
+      proj = pts.map(function (p, i) {
+        var x = p.x * cy - p.z * sy, z = p.x * sy + p.z * cy;
+        var y = p.y * cx - z * sx; z = p.y * sx + z * cx;
+        var k = f / (f - z);
+        return { i: i, sx: W / 2 + x * scale * k, sy: H / 2 + y * scale * k, k: k, z: z };
+      });
+    }
+    // Tamaño base de cada nodo según su tipo (px antes de la perspectiva).
+    var BASE = { proyecto: 15, bitacora: 13, paper: 12 };
+    var glow = [], burst = null, T = 0;
+    var STARS = [];
+    for (var si = 0; si < 90; si++) {
+      var sy0 = Math.random() * 2 - 1, sr = Math.sqrt(1 - sy0 * sy0), sth = Math.random() * 6.283;
+      STARS.push({ x: Math.cos(sth) * sr * 2.3, y: sy0 * 2.3, z: Math.sin(sth) * sr * 2.3, a: 0.15 + Math.random() * 0.45, f: Math.random() * 6 });
+    }
+    function rot(p) {
+      var cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
+      var x = p.x * cy - p.z * sy, z = p.x * sy + p.z * cy;
+      var y = p.y * cx - z * sx; z = p.y * sx + z * cx;
+      return { x: x, y: y, z: z };
+    }
+    function neighbors(i) {
+      var s = {};
+      edges.forEach(function (e) { if (e[0] === i) s[e[1]] = 1; if (e[1] === i) s[e[0]] = 1; });
+      return s;
+    }
+    function radius(p) { return BASE[list[p.i].tipo] * p.k * (1 + 0.45 * (glow[p.i] || 0)); }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      var scale = Math.min(W, H) * 0.46;
+      // Estrellas de fondo: giran más lento para dar profundidad.
+      ctx.fillStyle = LINE;
+      STARS.forEach(function (s) {
+        var q = rot({ x: s.x * 0.6, y: s.y * 0.6, z: s.z * 0.6 });
+        var k = 2.8 / (2.8 - q.z * 0.4);
+        var tw = REDUCE ? 1 : 0.65 + 0.35 * Math.sin(T * 0.0015 + s.f);
+        ctx.globalAlpha = s.a * tw * (q.z > 0 ? 1 : 0.55);
+        ctx.beginPath(); ctx.arc(W / 2 + q.x * scale * 0.9 * k, H / 2 + q.y * scale * 0.9 * k, 1.1 * k, 0, 6.3); ctx.fill();
+      });
+      var nb = hover >= 0 ? neighbors(hover) : null;
+      // Conexiones y pulsos que viajan por ellas.
+      ctx.strokeStyle = LINE;
+      edges.forEach(function (e, ei) {
+        var a = proj[e[0]], b = proj[e[1]], on = hover === e[0] || hover === e[1];
+        var depth = 0.08 + ((a.z + b.z) / 2 + 1) * 0.12;
+        ctx.globalAlpha = on ? 0.9 : (nb ? depth * 0.4 : depth);
+        ctx.lineWidth = on ? 2.2 : 1;
+        ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+        if (!REDUCE) {
+          var u = ((T * (on ? 0.0007 : 0.00025)) + ei * 0.137) % 1;
+          ctx.globalAlpha = on ? 1 : 0.55 * depth / 0.32;
+          ctx.fillStyle = COL[list[e[0]].tipo];
+          ctx.beginPath(); ctx.arc(a.sx + (b.sx - a.sx) * u, a.sy + (b.sy - a.sy) * u, on ? 3 : 1.8, 0, 6.3); ctx.fill();
+        }
+      });
+      // Nodos, del fondo hacia el frente.
+      proj.slice().sort(function (a, b) { return a.z - b.z; }).forEach(function (p) {
+        var n = list[p.i], col = COL[n.tipo], gl = glow[p.i] || 0, r = radius(p);
+        var dim = nb && p.i !== hover && !nb[p.i] ? 0.35 : 1;
+        var breathe = REDUCE ? 1 : 1 + 0.08 * Math.sin(T * 0.002 + p.i);
+        var gr = r * (3 + 2.2 * gl) * breathe;
+        var g = ctx.createRadialGradient(p.sx, p.sy, r * 0.4, p.sx, p.sy, gr);
+        g.addColorStop(0, col); g.addColorStop(1, 'transparent');
+        ctx.globalAlpha = (0.22 + (p.z + 1) * 0.16 + gl * 0.45) * dim;
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.sx, p.sy, gr, 0, 6.3); ctx.fill();
+        if (gl > 0.05 && !REDUCE) {
+          // Anillos que se expanden alrededor del nodo bajo el cursor.
+          for (var ring = 0; ring < 2; ring++) {
+            var ph = ((T / 1100) + ring * 0.5) % 1;
+            ctx.globalAlpha = (1 - ph) * 0.7 * gl;
+            ctx.strokeStyle = col; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(p.sx, p.sy, r * (1.2 + ph * 2.2), 0, 6.3); ctx.stroke();
+          }
+          ctx.strokeStyle = LINE;
+        }
+        var core = ctx.createRadialGradient(p.sx - r * 0.35, p.sy - r * 0.35, r * 0.1, p.sx, p.sy, r);
+        core.addColorStop(0, LINE); core.addColorStop(0.35, col); core.addColorStop(1, col);
+        ctx.globalAlpha = Math.min(1, 0.55 + (p.z + 1) * 0.25 + gl * 0.3) * dim;
+        ctx.fillStyle = core; ctx.beginPath(); ctx.arc(p.sx, p.sy, r, 0, 6.3); ctx.fill();
+        if (n.propia) { ctx.globalAlpha = 0.9 * dim; ctx.lineWidth = 2; ctx.strokeStyle = LINE; ctx.beginPath(); ctx.arc(p.sx, p.sy, r + 5, 0, 6.3); ctx.stroke(); }
+      });
+      // Onda al hacer clic.
+      if (burst) {
+        var bp = proj[burst.i], el2 = (T - burst.t0) / 420;
+        if (bp && el2 < 1) {
+          ctx.globalAlpha = 1 - el2; ctx.strokeStyle = COL[list[burst.i].tipo]; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.arc(bp.sx, bp.sy, radius(bp) + el2 * 90, 0, 6.3); ctx.stroke();
+          ctx.strokeStyle = LINE;
+        }
+      }
+      ctx.globalAlpha = 1;
+      if (hover >= 0 && proj[hover]) {
+        var h = proj[hover];
+        tip.hidden = false;
+        tip.setAttribute('data-tipo', list[hover].tipo);
+        tip.innerHTML = '<span class="small">' + TIPOS[list[hover].tipo] + ' · ' + esc(list[hover].tema) + '</span><strong>' + esc(list[hover].titulo) + '</strong><span class="red__tip-cta">Clic para abrir</span>';
+        tip.style.setProperty('--tx', Math.min(W - 140, Math.max(140, h.sx)) + 'px');
+        tip.style.setProperty('--ty', (h.sy - radius(h) - 14) + 'px');
+      } else tip.hidden = true;
+    }
+    function frame(now) {
+      T = now || 0;
+      if (auto && !drag && hover < 0) rotY += 0.0022;
+      for (var gi = 0; gi < list.length; gi++) {
+        var target = gi === hover ? 1 : 0;
+        glow[gi] = REDUCE ? target : (glow[gi] || 0) + (target - (glow[gi] || 0)) * 0.14;
+      }
+      project(); draw();
+      raf = window.requestAnimationFrame(frame);
+    }
+    function pick(e) {
+      var r = canvas.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, best = -1, bz = -9;
+      proj.forEach(function (p) {
+        var d = Math.hypot(p.sx - mx, p.sy - my);
+        if (d <= radius(p) + 8 && p.z > bz) { bz = p.z; best = p.i; }
+      });
+      return best;
+    }
+    canvas.addEventListener('pointerdown', function (e) {
+      drag = { x: e.clientX, y: e.clientY, ry: rotY, rx: rotX, moved: false };
+      canvas.setPointerCapture(e.pointerId);
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (drag) {
+        var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (Math.abs(dx) + Math.abs(dy) > 5) drag.moved = true;
+        rotY = drag.ry + dx * 0.008;
+        rotX = Math.max(-1.2, Math.min(1.2, drag.rx + dy * 0.008));
       } else {
-        state.nodo.propias.pop();
-        msg.className = 'notice notice--error';
-        msg.textContent = 'No pudimos publicar tu experiencia. Inténtalo de nuevo.';
+        hover = pick(e);
+        canvas.style.setProperty('cursor', hover >= 0 ? 'pointer' : 'grab');
       }
     });
+    canvas.addEventListener('pointerup', function (e) {
+      var d = drag; drag = null;
+      if (!d) return;
+      if (!d.moved) {
+        var i = pick(e);
+        if (i >= 0) {
+          burst = { i: i, t0: T };
+          track('red_nodo_clic');
+          window.setTimeout(function () { openFeed(list, i); }, REDUCE ? 0 : 260);
+        }
+      }
+      else track('red_girada');
+    });
+    canvas.addEventListener('pointerleave', function () { if (!drag) hover = -1; });
+    canvas.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { rotY -= 0.2; e.preventDefault(); }
+      if (e.key === 'ArrowRight') { rotY += 0.2; e.preventDefault(); }
+      if (e.key === 'ArrowUp') { rotX = Math.max(-1.2, rotX - 0.2); e.preventDefault(); }
+      if (e.key === 'ArrowDown') { rotX = Math.min(1.2, rotX + 0.2); e.preventDefault(); }
+      if (e.key === 'Enter') {
+        var front = proj.slice().sort(function (a, b) { return b.z - a.z; })[0];
+        if (front) openFeed(list, front.i);
+      }
+    });
+    stage.querySelector('[data-red-add]').addEventListener('click', openAddNode);
+    stage.querySelector('[data-red-random]').addEventListener('click', function () {
+      openFeed(list, Math.floor(Math.random() * list.length));
+    });
+    var pause = stage.querySelector('[data-red-pause]');
+    function setPause() { pause.setAttribute('aria-pressed', String(!auto)); pause.textContent = auto ? 'Pausar giro' : 'Reanudar giro'; }
+    pause.addEventListener('click', function () { auto = !auto; setPause(); });
+    setPause();
+    listEl.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-open]');
+      if (b) openFeed(list, Number(b.getAttribute('data-open')));
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) window.cancelAnimationFrame(raf); else raf = window.requestAnimationFrame(frame);
+    });
+    window.addEventListener('resize', resize);
+    build();
+    resize();
+    raf = window.requestAnimationFrame(frame);
+  }
+
+  /* Bitácora: multimedia (fotos, video, audio) y ejemplos. */
+  function bindMedia() {
+    var input = document.querySelector('[data-media-input]');
+    if (!input) return;
+    var btn = document.querySelector('[data-media-button]');
+    var prev = document.querySelector('[data-media-preview]');
+    var count = document.querySelector('[data-media-count]');
+    var sel = document.querySelector('[data-bitacora-session]');
+    var items = [];
+    function draw() {
+      prev.innerHTML = items.map(function (m, i) {
+        var view = m.tipo === 'imagen' ? (m.src ? '<img src="' + esc(m.src) + '" alt="' + esc(m.nombre) + '">' : '<div class="media-mock"><span class="media-dur">Procesando…</span></div>') :
+          (m.url ? (m.tipo === 'video' ? '<video src="' + esc(m.url) + '" controls preload="metadata"></video>' : '<audio src="' + esc(m.url) + '" controls></audio>') :
+            '<div class="media-mock' + (m.tipo === 'audio' ? ' media-mock--audio' : '') + '"><span class="media-dur">' + (m.tipo === 'video' ? 'Video' : 'Audio') + '</span></div>');
+        return '<figure class="media-item">' + view + '<figcaption>' + esc(m.nombre) + '<button type="button" class="link-button" data-media-remove="' + i + '">Quitar<span class="visually-hidden"> ' + esc(m.nombre) + '</span></button></figcaption></figure>';
+      }).join('');
+      count.textContent = items.length ? items.length + (items.length === 1 ? ' archivo multimedia' : ' archivos multimedia') : 'Sin archivos multimedia';
+    }
+    function load() {
+      var d = state.drafts[sel.value];
+      items = (d && d.media ? d.media : []).map(function (m) { return { tipo: m.tipo, nombre: m.nombre, src: m.src }; });
+      draw();
+    }
+    btn.addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(input.files || []);
+      files.forEach(function (file) {
+        if (items.length >= 4) { count.textContent = 'Puedes adjuntar hasta 4 archivos multimedia.'; return; }
+        var tipo = /^image\//.test(file.type) ? 'imagen' : (/^video\//.test(file.type) ? 'video' : (/^audio\//.test(file.type) ? 'audio' : ''));
+        if (!tipo) return;
+        var item = { tipo: tipo, nombre: file.name };
+        items.push(item);
+        if (tipo === 'imagen') downscale(file, function (src) { item.src = src; draw(); });
+        else item.url = URL.createObjectURL(file);
+        track('multimedia_adjuntada');
+      });
+      input.value = '';
+      draw();
+    });
+    prev.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-media-remove]');
+      if (!b) return;
+      items.splice(Number(b.getAttribute('data-media-remove')), 1);
+      draw();
+      btn.focus();
+    });
+    sel.addEventListener('change', load);
+    document.addEventListener('click', function (e) { if (e.target.closest('[data-open-draft]')) window.setTimeout(load, 0); });
+    S.getMedia = function () {
+      return items.filter(function (m) { return m.tipo !== 'imagen' || m.src; })
+        .map(function (m) { return { tipo: m.tipo, nombre: m.nombre, pie: m.nombre, src: m.tipo === 'imagen' ? m.src : undefined }; });
+    };
+    load();
+  }
+  function renderEjemplos() {
+    var ul = document.querySelector('[data-bitacora-ejemplos]');
+    if (!ul) return;
+    var ex = (D.bitacorasEjemplo || []).map(function (b) { return norm(b, 'bitacora'); });
+    ul.innerHTML = ex.map(function (b, i) {
+      var tipos = (b.media || []).map(function (m) { return m.tipo === 'imagen' ? 'foto' : (m.tipo === 'video' ? 'video' : 'audio'); }).join(', ');
+      return '<li><button type="button" class="node-chip" data-ejemplo="' + i + '"><span class="dot dot--bitacora" aria-hidden="true"></span><span><strong>' + esc(b.titulo) + '</strong><span class="small text-secondary">' + esc(b.autor) + ' · ' + esc(b.sesion) + ' · con ' + esc(tipos) + '</span></span></button></li>';
+    }).join('');
+    ul.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ejemplo]');
+      if (!b) return;
+      var body = el('div', 'stack', nodeHTML(ex[Number(b.getAttribute('data-ejemplo'))]));
+      bindWaves(body);
+      openDrawer({ kicker: 'Ejemplo de bitácora', title: 'Así se ve con multimedia', body: body });
+      track('bitacora_ejemplo_abierto');
+    });
+  }
+  function renderSavedMedia() {
+    var box = document.querySelector('[data-saved-summary]');
+    var n = new URLSearchParams(window.location.search).get('sesion');
+    var d = n && state.drafts[n];
+    if (!box || !d || !d.media || !d.media.length) return;
+    box.appendChild(el('h3', 'saved-label', 'Multimedia'));
+    var w = el('div', '', mediaHTML(d.media));
+    bindWaves(w);
+    box.appendChild(w);
+  }
+
+  /* ---------- Modo de navegación: entrada simulada (docente / coordinador) ----------
+   * No hay usuario ni contraseña: solo se elige el modo. Se guarda en state.modo.
+   * ?modo=docente o ?modo=coordinador en la URL lo fija sin pasar por la entrada (útil en Maze). */
+  var urlModo = new URLSearchParams(window.location.search).get('modo');
+  if (urlModo === 'docente' || urlModo === 'coordinador') { state.modo = urlModo; S.save(); }
+  if (S.page === 'coordinador' && state.modo !== 'coordinador') { state.modo = 'coordinador'; S.save(); }
+  function isCoord() { return state.modo === 'coordinador'; }
+  function setModo(m) { state.modo = m; S.save(); track(m === 'coordinador' ? 'entrar_coordinador' : 'entrar_docente'); }
+
+  var ICON_DOC = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5c3-1 6-1 9 1v14c-3-2-6-2-9-1z"></path><path d="M21 5c-3-1-6-1-9 1v14c3-2 6-2 9-1z"></path></svg>';
+  var ICON_COORD = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"></path><rect x="5" y="11" width="3" height="6" rx="1"></rect><rect x="10.5" y="7" width="3" height="10" rx="1"></rect><rect x="16" y="4" width="3" height="13" rx="1"></rect></svg>';
+  function showLogin() {
+    var wrap = el('div', 'login');
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-labelledby', 'login-title');
+    function option(m, t, d, ic) {
+      return '<button type="button" class="login__option login__option--' + m + '" id="btn-entrar-' + m + '" data-modo="' + m + '">' +
+        '<span class="login__icon">' + ic + '</span><strong>' + t + '</strong><span class="login__desc">' + d + '</span>' +
+        '<span class="login__go">Entrar' + ICON_ARROW + '</span></button>';
+    }
+    wrap.innerHTML = '<div class="login__panel">' +
+      '<div class="login__brand"><span class="brand__mark" aria-hidden="true">P<span>IA</span></span><span class="login__name">Ser profe<br>en la era de la IA</span></div>' +
+      '<h2 class="login__title" id="login-title">¿Cómo quieres navegar hoy?</h2>' +
+      '<p class="login__lead">Elige tu rol. Puedes cambiarlo cuando quieras desde la cabecera.</p>' +
+      '<div class="login__options">' +
+      option('docente', 'Docente participante', 'Continúa tu recorrido, escribe tu bitácora y explora Nodo IA.', ICON_DOC) +
+      option('coordinador', 'Coordinador pedagógico', 'El mismo curso, con seguimiento de la cohorte, entregas de bitácora y edición de módulos.', ICON_COORD) +
+      '</div>' +
+      '<p class="login__note"><strong>Demostración.</strong> No pedimos usuario ni contraseña.</p></div>';
+    document.body.appendChild(wrap);
+    document.body.classList.add('has-login');
+    var opts = wrap.querySelectorAll('[data-modo]');
+    opts[0].focus();
+    wrap.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var first = opts[0], last = opts[opts.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    wrap.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-modo]');
+      if (!b) return;
+      setModo(b.getAttribute('data-modo'));
+      window.location.reload();
+    });
+  }
+
+  function bindModo() {
+    var head = document.querySelector('.site-header__inner');
+    if (!head) return;
+    var on = isCoord();
+    document.body.classList.toggle('is-coord', on);
+    var box = el('div', 'mode-box');
+    var sw = el('button', 'mode-switch' + (on ? ' mode-switch--on' : ''),
+      '<span class="mode-switch__track" aria-hidden="true"><span class="mode-switch__thumb"></span></span>Modo coordinador');
+    sw.type = 'button';
+    sw.id = 'btn-modo-coordinador';
+    sw.setAttribute('aria-pressed', String(on));
+    sw.addEventListener('click', function () {
+      setModo(on ? 'docente' : 'coordinador');
+      if (S.page === 'coordinador') window.location.href = root + 'index.html'; else window.location.reload();
+    });
+    var exit = el('button', 'link-button mode-exit', 'Cambiar de rol');
+    exit.type = 'button';
+    exit.id = 'btn-cambiar-rol';
+    exit.addEventListener('click', function () { delete state.modo; S.save(); window.location.href = root + 'index.html'; });
+    box.appendChild(sw);
+    box.appendChild(exit);
+    var prof = head.querySelector('.profile');
+    head.insertBefore(box, prof);
+    if (on && prof) prof.hidden = true;
+    if (on) {
+      var nav = document.querySelector('.site-nav');
+      var ribbon = el('div', 'coord-ribbon',
+        '<div class="container coord-ribbon__inner"><span><strong>Modo coordinador.</strong> Ves el curso como los docentes, con opciones para revisar y editar.</span>' +
+        (S.page === 'coordinador' ? '' : '<a class="coord-ribbon__link" id="btn-ribbon-seguimiento" href="' + root + 'coordinador.html">Seguimiento de la cohorte →</a>') + '</div>');
+      if (nav) nav.parentNode.insertBefore(ribbon, nav.nextSibling);
+    }
   }
 
   function renderNodoCase() {
@@ -397,7 +1049,7 @@
       box.innerHTML =
         '<div class="row"><span class="pill pill--light-border">' + esc(c.disciplina) + '</span><span class="pill pill--pending">' + esc(c.tema) + '</span>' +
         '<span class="pill pill--soon">' + (c.propia ? 'Tu experiencia · Demostración local' : 'Caso de demostración') + '</span></div>' +
-        '<div class="case-text" data-glossary' + (c.propia ? ' data-hj-suppress' : '') + '>' + c.texto.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') + '</div>' +
+        (c.autores ? '<p class="node-meta">' + esc(c.autores) + ' (' + esc(c.anio) + ') · <em>' + esc(c.fuente) + '</em></p>' : '') + '<p class="lead">' + esc(c.resumen) + '</p>' + '<div class="case-text" data-glossary' + (c.propia ? ' data-hj-suppress' : '') + '>' + c.texto.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') + '</div>' + (c.partes ? c.partes.map(function (p) { return '<h3 class="saved-label">' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p>'; }).join('') : '') + (c.hallazgos ? '<ul class="plain-list">' + c.hallazgos.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' : '') + mediaHTML(c.media) + embedsHTML(c) +
         (c.claves ? '<p class="small text-secondary">Palabras clave: ' + esc(c.claves) + '</p>' : '') +
         (c.pregunta ? '<div class="panel panel--soft"><p class="eyebrow">Pregunta para conversar</p><p class="lead">' + esc(c.pregunta) + '</p></div>' : '') +
         '<section aria-labelledby="reco-title"><h2 class="h4" id="reco-title">¿Qué te deja este caso?</h2>' +
@@ -415,6 +1067,7 @@
         '<span class="small text-secondary">Demostración local: se guarda solo en este navegador.</span></div>' +
         '<p class="status-note" role="status" data-com-msg></p></form></section>';
       bindGlossary(box);
+      bindWaves(box);
     }
     draw();
 
@@ -477,10 +1130,10 @@
       var shown = rows.filter(function (r) { return active === 'todos' || r.e === active; });
       body.innerHTML = shown.map(function (r) {
         var cells = '';
-        for (var i = 1; i <= 10; i++) cells += '<span class="heat-cell ' + (i <= r.d.hechas ? 'heat-cell--done' : (i === r.d.hechas + 1 ? 'heat-cell--current' : '')) + '"></span>';
+        for (var i = 1; i <= 15; i++) cells += '<span class="heat-cell ' + (i <= r.d.hechas ? 'heat-cell--done' : (i === r.d.hechas + 1 ? 'heat-cell--current' : '')) + '"></span>';
         return '<tr>' +
           '<th scope="row">' + esc(r.d.id) + '</th>' +
-          '<td><span class="heat-cells" aria-hidden="true">' + cells + '</span><span class="small">' + r.d.hechas + ' de 10 sesiones</span></td>' +
+          '<td><span class="heat-cells" aria-hidden="true">' + cells + '</span><span class="small">' + r.d.hechas + ' de 15 sesiones</span></td>' +
           '<td>' + (r.d.dias === 0 ? 'Hoy' : 'Hace ' + r.d.dias + (r.d.dias === 1 ? ' día' : ' días')) + '</td>' +
           '<td>' + r.d.bitacoras + '</td>' +
           '<td><span class="pill ' + ESTADOS[r.e].pill + '">' + ESTADOS[r.e].label + '</span></td>' +
@@ -501,7 +1154,7 @@
       for (var i = 1; i <= r.d.bitacoras; i++) items += '<li>Sesión ' + S.pad(i) + ' · bitácora entregada</li>';
       var bodyEl = el('div', 'stack',
         '<div class="row"><span class="pill ' + ESTADOS[r.e].pill + '">' + ESTADOS[r.e].label + '</span><span class="pill pill--soon">Datos de demostración</span></div>' +
-        '<dl class="facts"><div><dt>Avance</dt><dd>' + r.d.hechas + ' de 10 sesiones</dd></div>' +
+        '<dl class="facts"><div><dt>Avance</dt><dd>' + r.d.hechas + ' de 15 sesiones</dd></div>' +
         '<div><dt>Última actividad</dt><dd>' + (r.d.dias === 0 ? 'Hoy' : 'Hace ' + r.d.dias + ' días') + '</dd></div>' +
         '<div><dt>Bitácoras</dt><dd>' + r.d.bitacoras + '</dd></div></dl>' +
         '<h3 class="h4">Bitácoras</h3>' +
@@ -544,7 +1197,7 @@
       var row = document.querySelector('.session-head .row');
       if (row) row.appendChild(editedPill());
       var obj = document.querySelector('[aria-labelledby="obj-' + n + '"] p');
-      var act = document.querySelector('[aria-labelledby="act-' + n + '"] p');
+      var act = document.querySelector('[aria-labelledby="act-' + n + '"] .artifact__desc') || document.querySelector('[aria-labelledby="act-' + n + '"] p');
       var rec = document.querySelector('[aria-labelledby="rec-' + n + '"] .resource-frame');
       if (ov.publicada === false) {
         setText(document.querySelector('.session-head .lead'), 'Esta sesión no está publicada todavía.');
@@ -669,7 +1322,7 @@
     var ver = form.querySelector('[data-ed-ver]');
     var resumen = document.querySelector('[data-ed-resumen]');
     var opts = '';
-    for (var i = 1; i <= 10; i++) opts += '<option value="' + i + '">Sesión ' + S.pad(i) + '</option>';
+    for (var i = 1; i <= 15; i++) opts += '<option value="' + i + '">Sesión ' + S.pad(i) + '</option>';
     sel.innerHTML = opts;
     function field(k) { return form.querySelector('[data-ed="' + k + '"]'); }
     function fill() {
@@ -681,11 +1334,11 @@
     }
     function drawResumen() {
       var html = '';
-      for (var i = 1; i <= 10; i++) {
+      for (var i = 1; i <= 15; i++) {
         var ov = C.sesiones[i];
         var st = !ov ? '<span class="pill pill--pending">Sin editar</span>' :
           (ov.publicada === false ? '<span class="pill pill--slow">No publicada</span>' : '<span class="pill pill--ok">Publicada</span>');
-        html += '<li><span><strong>Sesión ' + S.pad(i) + '</strong><br><span class="small text-secondary">' + esc(ov && ov.titulo ? ov.titulo : 'Título pendiente de confirmar') + '</span></span>' + st + '</li>';
+        html += '<li><span><strong>Sesión ' + S.pad(i) + '</strong><br><span class="small text-secondary">' + esc(ov && ov.titulo ? ov.titulo : (D.sesiones && D.sesiones[i - 1] ? D.sesiones[i - 1].titulo : 'Título pendiente de confirmar')) + '</span></span>' + st + '</li>';
       }
       resumen.innerHTML = html;
     }
@@ -768,14 +1421,434 @@
     draw();
   }
 
+  /* ---------- Modo coordinador dentro de las páginas del curso ---------- */
+  if (!C.opcionales) C.opcionales = [];
+  function entregasDe(n) {
+    var list = D.cohorte.map(function (d) { return { id: d.id, ok: d.bitacoras >= n, estado: estadoDe(d) }; });
+    if (state.drafts && state.drafts[n]) list.unshift({ id: 'Docente de este navegador', ok: true, local: true, estado: 'aldia' });
+    return list;
+  }
+  function conteo(n) { var l = entregasDe(n); return { ok: l.filter(function (x) { return x.ok; }).length, total: l.length }; }
+  function reloadAfter(drawer) { if (drawer) drawer.close(); window.location.reload(); }
+
+  function openEntregas(n) {
+    var l = entregasDe(n), c = conteo(n);
+    var body = el('div', 'stack',
+      '<div class="entregas-sum"><span class="entregas-sum__num">' + c.ok + '<small> de ' + c.total + '</small></span><span>docentes entregaron la bitácora de la sesión ' + S.pad(n) + '</span></div>' +
+      '<div class="progress" role="img" aria-label="' + c.ok + ' de ' + c.total + ' entregaron"><div class="progress__fill entregas-fill"></div></div>' +
+      '<ul class="entregas">' + l.map(function (x) {
+        return '<li><span class="avatar avatar--sm" aria-hidden="true">' + esc(x.local ? 'TÚ' : x.id.replace(/\D/g, '')) + '</span><span class="entregas__who">' + esc(x.id) +
+          (x.estado === 'riesgo' ? ' <span class="pill pill--risk">En riesgo</span>' : '') + '</span>' +
+          (x.ok ? '<span class="pill pill--ok">Entregó</span>' : '<span class="pill pill--pending">Pendiente</span>') +
+          (x.local ? '<a class="link-button" href="' + root + 'bitacora.html?sesion=' + n + '#revision">Revisar</a>' : '') + '</li>';
+      }).join('') + '</ul>' +
+      '<p class="small text-secondary">Datos de demostración. El contenido de las bitácoras de la cohorte ficticia no existe; solo se puede revisar la del docente de este navegador.</p>');
+    body.querySelector('.entregas-fill').style.setProperty('--progress', Math.round(c.ok / c.total * 100) + '%');
+    openDrawer({ kicker: 'Entregas de bitácora', title: 'Sesión ' + S.pad(n), body: body });
+    track('coordinador_entregas');
+  }
+
+  function editSession(n) {
+    var ov = C.sesiones[n] || {};
+    var f = el('form', 'form-stack',
+      '<div class="field"><label for="es-titulo">Título</label><input type="text" id="es-titulo" maxlength="80" autocomplete="off"></div>' +
+      '<div class="field"><label for="es-objetivo">Objetivo</label><textarea id="es-objetivo" rows="3"></textarea></div>' +
+      '<div class="field"><label for="es-actividad">Actividad</label><textarea id="es-actividad" rows="3"></textarea></div>' +
+      '<div class="field"><label for="es-recurso">Enlace del recurso (opcional)</label><input type="url" id="es-recurso" placeholder="https://" autocomplete="off"></div>' +
+      '<label class="check"><input type="checkbox" id="es-pub"> Sesión publicada para los docentes</label>' +
+      '<div class="form-actions"><button type="submit" class="btn btn--primary" id="btn-coord-guardar-sesion">Guardar cambios</button><button type="button" class="btn btn--secondary" data-reset>Restablecer original</button></div>' +
+      '<p class="status-note" role="status"></p>');
+    f.setAttribute('novalidate', '');
+    f.querySelector('#es-titulo').value = ov.titulo || '';
+    f.querySelector('#es-objetivo').value = ov.objetivo || '';
+    f.querySelector('#es-actividad').value = ov.actividad || '';
+    f.querySelector('#es-recurso').value = ov.recurso || '';
+    f.querySelector('#es-pub').checked = ov.publicada !== false;
+    var d = openDrawer({ kicker: 'Editar contenido', title: 'Sesión ' + S.pad(n), body: f });
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var url = f.querySelector('#es-recurso').value.trim();
+      if (url && !/^https:\/\//i.test(url)) { f.querySelector('.status-note').textContent = 'El enlace debe empezar por https://'; return; }
+      C.sesiones[n] = { titulo: f.querySelector('#es-titulo').value.trim(), objetivo: f.querySelector('#es-objetivo').value.trim(), actividad: f.querySelector('#es-actividad').value.trim(), recurso: url, publicada: f.querySelector('#es-pub').checked };
+      if (S.save()) { track('coordinador_sesion_editada'); reloadAfter(d); }
+    });
+    f.querySelector('[data-reset]').addEventListener('click', function () { delete C.sesiones[n]; S.save(); reloadAfter(d); });
+  }
+
+  function editModule(n) {
+    var mo = C.modulos[n] || {};
+    var f = el('form', 'form-stack',
+      '<p class="small text-secondary">' + esc(MODULOS[n - 1]) + ' (nombre oficial, no se edita).</p>' +
+      '<div class="field"><label for="em-fecha">Fecha de apertura</label><input type="date" id="em-fecha"></div>' +
+      '<div class="field"><label for="em-nota">Nota para los docentes</label><input type="text" id="em-nota" maxlength="140" autocomplete="off"></div>' +
+      (n === 3 ? '<div class="field"><label for="em-obj">Objetivos del módulo</label><p class="field__help">Uno por línea.</p><textarea id="em-obj" rows="5"></textarea></div>' : '') +
+      '<div class="form-actions"><button type="submit" class="btn btn--primary" id="btn-coord-guardar-modulo">Guardar cambios</button></div>');
+    f.setAttribute('novalidate', '');
+    f.querySelector('#em-fecha').value = mo.apertura || '';
+    f.querySelector('#em-nota').value = mo.nota || '';
+    if (n === 3) f.querySelector('#em-obj').value = (mo.objetivos || []).join('\n');
+    var d = openDrawer({ kicker: 'Editar módulo', title: 'Módulo ' + S.pad(n), body: f });
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var next = { apertura: f.querySelector('#em-fecha').value, nota: f.querySelector('#em-nota').value.trim() };
+      if (n === 3) next.objetivos = f.querySelector('#em-obj').value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+      C.modulos[n] = next;
+      if (S.save()) { track('coordinador_modulo_editado'); reloadAfter(d); }
+    });
+  }
+
+  function editOpcional(id) {
+    var cur = null;
+    C.opcionales.forEach(function (o) { if (o.id === id) cur = o; });
+    var f = el('form', 'form-stack',
+      '<div class="field"><label for="op-titulo">Nombre del módulo</label><input type="text" id="op-titulo" maxlength="90" autocomplete="off"></div>' +
+      '<div class="field"><label for="op-desc">Descripción</label><p class="field__help">Qué encontrarán los docentes y para quién es.</p><textarea id="op-desc" rows="4"></textarea></div>' +
+      '<div class="field"><label for="op-dur">Duración</label><input type="text" id="op-dur" placeholder="Por ejemplo: 2 semanas · 6 h" autocomplete="off"></div>' +
+      '<div class="field"><label for="op-fecha">Fecha de apertura (opcional)</label><input type="date" id="op-fecha"></div>' +
+      '<div class="form-actions"><button type="submit" class="btn btn--primary" id="btn-coord-guardar-opcional">' + (cur ? 'Guardar cambios' : 'Crear módulo opcional') + '</button>' +
+      (cur ? '<button type="button" class="btn btn--secondary" data-del>Eliminar módulo</button>' : '') + '</div>' +
+      '<p class="status-note" role="status"></p>');
+    f.setAttribute('novalidate', '');
+    if (cur) {
+      f.querySelector('#op-titulo').value = cur.titulo; f.querySelector('#op-desc').value = cur.descripcion;
+      f.querySelector('#op-dur').value = cur.duracion || ''; f.querySelector('#op-fecha').value = cur.apertura || '';
+    }
+    var d = openDrawer({ kicker: 'Módulo opcional', title: cur ? 'Editar módulo opcional' : 'Crear un módulo opcional', body: f });
+    var note = f.querySelector('.status-note');
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var t = f.querySelector('#op-titulo').value.trim(), ds = f.querySelector('#op-desc').value.trim();
+      if (!t || !ds) { note.textContent = 'Escribe el nombre y la descripción del módulo.'; return; }
+      var item = cur || { id: 'op' + Date.now() };
+      item.titulo = t; item.descripcion = ds; item.duracion = f.querySelector('#op-dur').value.trim(); item.apertura = f.querySelector('#op-fecha').value;
+      if (!cur) C.opcionales.push(item);
+      if (S.save()) { track('coordinador_modulo_opcional'); reloadAfter(d); }
+    });
+    var del = f.querySelector('[data-del]');
+    if (del) del.addEventListener('click', function () {
+      if (del.getAttribute('data-confirm') !== '1') { del.setAttribute('data-confirm', '1'); del.textContent = 'Confirmar: eliminar'; note.textContent = 'Pulsa de nuevo para eliminar el módulo opcional.'; return; }
+      C.opcionales = C.opcionales.filter(function (o) { return o.id !== cur.id; });
+      S.save(); reloadAfter(d);
+    });
+  }
+
+  // Módulos opcionales: los ven docentes y coordinador; solo el coordinador los edita.
+  function renderOpcionales() {
+    if (!C.opcionales.length) return;
+    var map = document.querySelector('[data-course-map]');
+    var grid = document.querySelector('.module-grid');
+    C.opcionales.forEach(function (o) {
+      var when = o.apertura ? 'Disponible a partir del ' + fechaTexto(o.apertura) : 'Disponible próximamente';
+      var edit = isCoord() ? '<button type="button" class="btn btn--secondary coord-btn" data-coord-op="' + esc(o.id) + '">Editar</button>' : '';
+      if (map) {
+        map.appendChild(el('li', 'course-map__item course-map__item--opcional',
+          '<span class="course-map__node" aria-hidden="true">+</span><div class="course-map__card"><div class="course-map__body">' +
+          '<p class="eyebrow">Módulo opcional' + (o.duracion ? ' · ' + esc(o.duracion) : '') + '</p><h3>' + esc(o.titulo) + '</h3><p class="text-secondary">' + esc(o.descripcion) + '</p></div>' +
+          '<span class="row"><span class="pill pill--soon">' + esc(when) + '</span>' + edit + '</span></div>'));
+      }
+      if (grid) {
+        grid.appendChild(el('li', '', '<div class="module-card module-card--opcional"><p class="eyebrow">Módulo opcional</p><h3>' + esc(o.titulo) + '</h3>' +
+          '<p class="module-card__meta">' + esc(o.duracion || 'Duración por definir') + '</p><span class="module-card__status pill pill--soon">' + esc(when) + '</span></div>'));
+      }
+    });
+  }
+
+  function coordTools() {
+    if (!isCoord()) return;
+    // Inicio: igual que el docente, más el acceso al seguimiento de la cohorte.
+    var bento = document.querySelector('.bento');
+    if (S.page === 'inicio' && bento) {
+      var cnt = { riesgo: 0, lento: 0, aldia: 0 };
+      D.cohorte.forEach(function (d) { cnt[estadoDe(d)]++; });
+      bento.parentNode.insertBefore(el('section', 'coord-card',
+        '<div class="coord-card__text"><p class="eyebrow">Coordinación</p><h2>Seguimiento de la cohorte</h2>' +
+        '<p class="row"><span class="pill pill--risk">' + cnt.riesgo + ' en riesgo</span><span class="pill pill--slow">' + cnt.lento + ' con avance lento</span><span class="pill pill--ok">' + cnt.aldia + ' al día</span></p></div>' +
+        '<a class="btn btn--primary" id="btn-seguimiento-cohorte" href="' + root + 'coordinador.html">Ver seguimiento de la cohorte' + ICON_ARROW + '</a>'), bento.nextSibling);
+    }
+    // Mapa: editar cada módulo y crear módulos opcionales.
+    if (S.page === 'mapa') {
+      Array.prototype.forEach.call(document.querySelectorAll('.course-map__item:not(.course-map__item--opcional) .course-map__card'), function (card, i) {
+        card.appendChild(el('button', 'btn btn--secondary coord-btn', 'Editar módulo')).setAttribute('data-coord-mod', String(i + 1));
+      });
+      var heading = document.querySelector('.view-toggle');
+      if (heading) {
+        var add = el('button', 'btn btn--primary', '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Crear módulo opcional');
+        add.type = 'button'; add.id = 'btn-crear-modulo-opcional'; add.setAttribute('data-coord-op', '');
+        heading.parentNode.insertBefore(add, heading);
+      }
+    }
+    // Módulo: objetivos editables y, en cada sesión, editar y ver entregas.
+    if (S.page === 'modulo') {
+      var objSec = document.querySelector('[aria-labelledby="objetivos-title"]');
+      if (objSec) objSec.appendChild(el('button', 'btn btn--secondary coord-btn', 'Editar objetivos y fechas')).setAttribute('data-coord-mod', '3');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-session-card]'), function (card) {
+        var n = Number(card.getAttribute('data-session-card')), c = conteo(n);
+        card.appendChild(el('div', 'coord-tools coord-tools--inline',
+          '<button type="button" class="coord-chip" data-coord-entregas="' + n + '"><strong>' + c.ok + '/' + c.total + '</strong> entregaron</button>' +
+          '<button type="button" class="coord-chip" data-coord-sesion="' + n + '">Editar sesión</button>'));
+      });
+    }
+    // Sesión: herramientas arriba del contenido.
+    if (S.page === 'sesion') {
+      var n = Number(document.body.getAttribute('data-session')), c = conteo(n), ov = C.sesiones[n];
+      var art = document.querySelector('.session-content');
+      if (art) art.insertBefore(el('div', 'coord-tools',
+        '<p class="coord-tools__title">Herramientas de coordinación</p>' +
+        '<span class="pill ' + (ov && ov.publicada === false ? 'pill--slow">No publicada' : 'pill--ok">Publicada') + '</span>' +
+        '<button type="button" class="coord-chip" id="btn-coord-entregas" data-coord-entregas="' + n + '"><strong>' + c.ok + ' de ' + c.total + '</strong> entregaron la bitácora</button>' +
+        '<button type="button" class="coord-chip" id="btn-coord-editar-sesion" data-coord-sesion="' + n + '">Editar sesión</button>'), art.firstChild);
+    }
+    // Bitácora: entregas por sesión y revisión de la bitácora de este navegador.
+    if (S.page === 'bitacora') {
+      var split = document.querySelector('.split');
+      var rows = '';
+      for (var s = 1; s <= 15; s++) { var k = conteo(s); rows += '<tr><th scope="row">Sesión ' + S.pad(s) + '</th><td><span class="heat-cells" aria-hidden="true"><span class="heat-bar"><span class="heat-bar__fill" data-w="' + Math.round(k.ok / k.total * 100) + '"></span></span></span>' + k.ok + ' de ' + k.total + '</td><td><button type="button" class="link-button" data-coord-entregas="' + s + '">Ver entregas<span class="visually-hidden"> de la sesión ' + S.pad(s) + '</span></button></td></tr>'; }
+      var sec = el('section', 'section coord-section',
+        '<div class="section-heading"><h2 id="entregas-title">Entregas de bitácora</h2><span class="pill pill--soon">Datos de demostración</span></div>' +
+        '<div class="table-wrap" role="region" aria-labelledby="entregas-title" tabindex="0"><table class="cohort"><thead><tr><th scope="col">Sesión</th><th scope="col">Entregaron</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+        '<h2 class="section" id="revision">Revisión de bitácoras</h2><p class="text-secondary">Lee las bitácoras guardadas en este navegador y deja una retroalimentación escrita por ti. No usamos corrección automática.</p>' +
+        '<div class="split"><ul class="drafts panel" data-rev-lista></ul><div class="panel" data-rev-detalle><p class="text-secondary">Elige una bitácora de la lista.</p></div></div>');
+      if (split) split.parentNode.insertBefore(sec, split.nextSibling);
+      Array.prototype.forEach.call(sec.querySelectorAll('[data-w]'), function (b) { b.style.setProperty('--w', b.getAttribute('data-w') + '%'); });
+      bindReview();
+      var q = new URLSearchParams(window.location.search).get('sesion');
+      if (window.location.hash === '#revision' && q) {
+        var rb = sec.querySelector('[data-rev="' + Number(q) + '"]');
+        if (rb) rb.click();
+        sec.querySelector('#revision').scrollIntoView();
+      }
+    }
+    document.addEventListener('click', function (e) {
+      var b;
+      if ((b = e.target.closest('[data-coord-entregas]'))) openEntregas(Number(b.getAttribute('data-coord-entregas')));
+      else if ((b = e.target.closest('[data-coord-sesion]'))) editSession(Number(b.getAttribute('data-coord-sesion')));
+      else if ((b = e.target.closest('[data-coord-mod]'))) editModule(Number(b.getAttribute('data-coord-mod')));
+      else if ((b = e.target.closest('[data-coord-op]'))) editOpcional(b.getAttribute('data-coord-op'));
+    });
+  }
+
+  // Objetivos del módulo editados por coordinación (visibles para todos).
+  function applyObjetivos() {
+    var mo = C.modulos['3'];
+    var sec = document.querySelector('[aria-labelledby="objetivos-title"]');
+    if (!sec || !mo || !mo.objetivos || !mo.objetivos.length) return;
+    var pill = sec.querySelector('.pill--soon'), p = sec.querySelector('p.text-secondary');
+    if (pill) { pill.className = 'pill pill--edited'; pill.textContent = EDITED; }
+    if (p) p.replaceWith(el('ul', 'plain-list', mo.objetivos.map(function (o) { return '<li>' + esc(o) + '</li>'; }).join('')));
+  }
+
+  /* ---------- Módulo y sesiones: recorrido 3D, tarjetas, semana y Caja ---------- */
+  var MOD_COL = ['--color-primary-light', '--color-cta', '--color-teal-tint', '--color-sun-tint', '--color-white'];
+
+  /* Espiral 3D: las 10 sesiones como una escalera que sube. Distinta de la red de
+     Nodo IA: aquí el orden importa, así que los nodos siguen un camino continuo. */
+  function renderHelix() {
+    var stage = document.querySelector('[data-helix]');
+    if (!stage) return;
+    var canvas = stage.querySelector('canvas'), ctx = canvas.getContext('2d');
+    var tip = stage.querySelector('[data-helix-tip]');
+    var SES = D.sesiones || [];
+    var N = SES.length;
+    var COLS = MOD_COL.map(cssVar), LINE = cssVar('--color-white'), DARK = cssVar('--color-primary-dark');
+    var rotY = -0.6, rotX = 0.28, auto = !REDUCE, drag = null, hover = -1, W = 0, H = 0, T = 0, raf = 0, glow = [];
+    function pos(t) {
+      var a = t * Math.PI * 2.4;
+      return { x: Math.cos(a) * 0.95, y: 0.95 - t * 1.9, z: Math.sin(a) * 0.95 };
+    }
+    var pts = SES.map(function (s, i) { return pos(i / (N - 1)); });
+    function nextIdx() { for (var i = 1; i <= N; i++) if (!state.completed[i]) return i - 1; return -1; }
+    function resize() {
+      var r = canvas.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = r.width; H = r.height; canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function proj(p) {
+      var cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
+      var x = p.x * cy - p.z * sy, z = p.x * sy + p.z * cy;
+      var y = p.y * cx - z * sx; z = p.y * sx + z * cx;
+      var sc = Math.min(W * 0.3, H * 0.3), k = 3 / (3 - z);
+      return { sx: W / 2 + x * sc * k, sy: H / 2 + 22 + y * sc * k, z: z, k: k };
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      var cur = nextIdx();
+      // Camino continuo de la espiral, con brillo según profundidad.
+      var steps = 140, prev = null;
+      for (var s = 0; s <= steps; s++) {
+        var t = s / steps, q = proj(pos(t)), i = Math.min(N - 1, Math.floor(t * (N - 1) + 0.0001));
+        if (prev) {
+          var doneSeg = state.completed[i + 1];
+          ctx.globalAlpha = 0.18 + (q.z + 1) * 0.22;
+          ctx.strokeStyle = doneSeg ? COLS[SES[i].fase - 1] : LINE;
+          ctx.lineWidth = (doneSeg ? 4 : 2) * q.k;
+          ctx.beginPath(); ctx.moveTo(prev.sx, prev.sy); ctx.lineTo(q.sx, q.sy); ctx.stroke();
+        }
+        prev = q;
+      }
+      // Luz que recorre el camino.
+      if (!REDUCE) {
+        var lt = (T * 0.00012) % 1, lq = proj(pos(lt));
+        var lg = ctx.createRadialGradient(lq.sx, lq.sy, 0, lq.sx, lq.sy, 18 * lq.k);
+        lg.addColorStop(0, LINE); lg.addColorStop(1, 'transparent');
+        ctx.globalAlpha = 0.7; ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(lq.sx, lq.sy, 18 * lq.k, 0, 6.3); ctx.fill();
+      }
+      var P = pts.map(function (p, i) { var q = proj(p); q.i = i; return q; });
+      P.slice().sort(function (a, b) { return a.z - b.z; }).forEach(function (q) {
+        var i = q.i, col = COLS[SES[i].fase - 1], done = !!state.completed[i + 1], gl = glow[i] || 0;
+        var r = ((N > 10 ? 13 : 16) + gl * 7) * q.k;
+        var g = ctx.createRadialGradient(q.sx, q.sy, r * 0.3, q.sx, q.sy, r * (2.6 + gl * 1.5));
+        g.addColorStop(0, col); g.addColorStop(1, 'transparent');
+        ctx.globalAlpha = (done ? 0.45 : 0.22) + gl * 0.35;
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q.sx, q.sy, r * (2.6 + gl * 1.5), 0, 6.3); ctx.fill();
+        ctx.globalAlpha = 0.55 + (q.z + 1) * 0.22;
+        if (done) {
+          var core = ctx.createRadialGradient(q.sx - r * 0.35, q.sy - r * 0.35, r * 0.1, q.sx, q.sy, r);
+          core.addColorStop(0, LINE); core.addColorStop(0.4, col); core.addColorStop(1, col);
+          ctx.fillStyle = core;
+        } else ctx.fillStyle = DARK;
+        ctx.beginPath(); ctx.arc(q.sx, q.sy, r, 0, 6.3); ctx.fill();
+        ctx.lineWidth = 2.5; ctx.strokeStyle = col; ctx.stroke();
+        if (i === cur && !REDUCE) {
+          var ph = (T / 1300) % 1;
+          ctx.globalAlpha = 1 - ph; ctx.beginPath(); ctx.arc(q.sx, q.sy, r * (1.15 + ph * 1.4), 0, 6.3); ctx.stroke();
+        }
+        ctx.globalAlpha = Math.min(1, 0.65 + (q.z + 1) * 0.2);
+        ctx.fillStyle = done ? DARK : LINE;
+        ctx.font = '700 ' + Math.round(12 * q.k) + 'px ' + cssVar('--font-heading');
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(S.pad(i + 1), q.sx, q.sy + 0.5);
+      });
+      ctx.globalAlpha = 1;
+      if (hover >= 0) {
+        var h = P[hover];
+        tip.hidden = false;
+        tip.innerHTML = '<span class="small">Sesión ' + S.pad(hover + 1) + ' · Módulo ' + SES[hover].fase + (state.completed[hover + 1] ? ' · Completada' : (hover === cur ? ' · En curso' : '')) + '</span><strong>' + esc(SES[hover].titulo) + '</strong>';
+        tip.style.setProperty('--tx', Math.min(W - 150, Math.max(150, h.sx)) + 'px');
+        tip.style.setProperty('--ty', (h.sy - 30 * h.k) + 'px');
+      } else tip.hidden = true;
+      return P;
+    }
+    var last = [];
+    function frame(now) {
+      T = now || 0;
+      if (auto && !drag && hover < 0) rotY += 0.003;
+      for (var i = 0; i < N; i++) glow[i] = REDUCE ? (i === hover ? 1 : 0) : (glow[i] || 0) + ((i === hover ? 1 : 0) - (glow[i] || 0)) * 0.15;
+      last = draw();
+      raf = window.requestAnimationFrame(frame);
+    }
+    function pick(e) {
+      var r = canvas.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, best = -1, bz = -9;
+      last.forEach(function (q) { if (Math.hypot(q.sx - mx, q.sy - my) < 22 * q.k && q.z > bz) { bz = q.z; best = q.i; } });
+      return best;
+    }
+    function open(i) { track('helix_sesion'); window.location.href = root + 'sesiones/sesion-' + S.pad(i + 1) + '.html'; }
+    canvas.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, ry: rotY, rx: rotX, moved: false }; canvas.setPointerCapture(e.pointerId); });
+    canvas.addEventListener('pointermove', function (e) {
+      if (drag) {
+        var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (Math.abs(dx) + Math.abs(dy) > 5) drag.moved = true;
+        rotY = drag.ry + dx * 0.009; rotX = Math.max(-0.9, Math.min(0.9, drag.rx + dy * 0.006));
+      } else { hover = pick(e); canvas.style.setProperty('cursor', hover >= 0 ? 'pointer' : 'grab'); }
+    });
+    canvas.addEventListener('pointerup', function (e) { var d = drag; drag = null; if (d && !d.moved) { var i = pick(e); if (i >= 0) open(i); } else if (d) auto = false; });
+    canvas.addEventListener('pointerleave', function () { if (!drag) hover = -1; });
+    canvas.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { rotY -= 0.25; e.preventDefault(); }
+      if (e.key === 'ArrowRight') { rotY += 0.25; e.preventDefault(); }
+      if (e.key === 'Enter') { var c = nextIdx(); open(c < 0 ? 0 : c); }
+    });
+    window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) window.cancelAnimationFrame(raf); else raf = window.requestAnimationFrame(frame); });
+    resize();
+    raf = window.requestAnimationFrame(frame);
+  }
+
+  // Anillo de avance del módulo (CSS conic-gradient con la variable --p).
+  function renderRing() {
+    var ring = document.querySelector('[data-ring]');
+    if (!ring) return;
+    var N = (D.sesiones || []).length || 15, c = 0;
+    for (var i = 1; i <= N; i++) if (state.completed[i]) c++;
+    ring.style.setProperty('--p', Math.round(c / N * 100) + '%');
+  }
+
+  // Tarjetas de tópicos que giran en 3D.
+  function bindTopics() {
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-topic]');
+      if (!b) return;
+      var on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      if (on) track('topico_abierto');
+    });
+  }
+
+  // "Tu semana": cinco pasos que el docente marca; se guardan por sesión.
+  function bindWeek() {
+    var ol = document.querySelector('[data-week]');
+    if (!ol) return;
+    var n = ol.getAttribute('data-week');
+    if (!state.semana) state.semana = {};
+    var marks = state.semana[n] || [false, false, false, false, false];
+    var status = document.querySelector('[data-week-status]');
+    var btns = ol.querySelectorAll('[data-week-step]');
+    function draw() {
+      var c = 0;
+      Array.prototype.forEach.call(btns, function (b, i) { b.setAttribute('aria-pressed', String(!!marks[i])); if (marks[i]) c++; });
+      ol.style.setProperty('--done', String(c));
+      if (status) status.textContent = c === 5 ? 'Semana completa. Ya puedes marcar la sesión como completada.' : c + ' de 5 pasos de la semana · Demostración local';
+    }
+    ol.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-week-step]');
+      if (!b) return;
+      var i = Number(b.getAttribute('data-week-step'));
+      marks[i] = !marks[i];
+      state.semana[n] = marks;
+      S.save();
+      draw();
+      track(marks[i] ? 'semana_paso_hecho' : 'semana_paso_pendiente');
+    });
+    draw();
+  }
+
+  // Inclinación 3D leve que sigue el cursor (tarjetas de sesión del módulo).
+  function bindTilt() {
+    if (REDUCE || !window.matchMedia('(hover: hover)').matches) return;
+    document.addEventListener('pointermove', function (e) {
+      var c = e.target.closest && e.target.closest('[data-tilt]');
+      if (!c) return;
+      var r = c.getBoundingClientRect();
+      c.style.setProperty('--rx', ((0.5 - (e.clientY - r.top) / r.height) * 6).toFixed(2) + 'deg');
+      c.style.setProperty('--ry', (((e.clientX - r.left) / r.width - 0.5) * 8).toFixed(2) + 'deg');
+      c.classList.add('is-tilting');
+    });
+    document.addEventListener('pointerout', function (e) {
+      var c = e.target.closest && e.target.closest('[data-tilt]');
+      if (c && !c.contains(e.relatedTarget)) { c.classList.remove('is-tilting'); c.style.removeProperty('--rx'); c.style.removeProperty('--ry'); }
+    });
+  }
+
   /* ---------- Arranque ---------- */
   applyContent();
   bindFeedback();
   if (S.page === 'coordinador') { bindCoordTabs(); bindModuleEditor(); bindSessionEditor(); bindReview(); }
   bindGlossaryEvents();
-  if (S.page === 'nodo') renderNodoList();
+  if (S.page === 'nodo') renderRed();
+  bindMedia();
+  renderEjemplos();
+  if (S.page === 'bitacora-guardada') renderSavedMedia();
+  bindModo();
+  applyObjetivos();
+  renderOpcionales();
+  coordTools();
+  if (!state.modo && S.page !== '404') showLogin();
   if (S.page === 'nodo-caso') renderNodoCase();
   if (S.page === 'coordinador') renderCoordinador();
+  renderHelix();
+  renderRing();
+  bindTopics();
+  bindWeek();
+  bindTilt();
   bindGlossary();
   bindTutor();
 })();

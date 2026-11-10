@@ -10,7 +10,7 @@ Hasta que Miguel suba los archivos y pruebe el subdominio, estas URL no funciona
 |---|---|---|
 | Inicio | `/index.html` (o `/`) | Progreso, "Continuar mi curso", accesos a la bitácora y al mapa |
 | Mapa del curso | `/mapa-curso.html` | Los 5 módulos del diplomado y los hitos |
-| Módulo de evaluación | `/modulo-evaluacion.html` | Objetivos (pendientes) y lista de 10 sesiones |
+| Sesiones del diplomado | `/modulo-evaluacion.html` (la URL no cambió) | Espiral 3D, resultados de aprendizaje de los 5 módulos y las 15 sesiones agrupadas por módulo (`/sesiones/sesion-01.html` a `sesion-15.html`) |
 | Sesión 01 a 10 | `/sesiones/sesion-01.html` … `/sesiones/sesion-10.html` | Objetivo, recursos y actividad de cada sesión |
 | Mi bitácora | `/bitacora.html` | Escribir y guardar la reflexión (3 campos) |
 | Borrador guardado | `/bitacora-guardada.html` | Confirmación de que el borrador se guardó |
@@ -19,10 +19,16 @@ Todas las páginas tienen instalados los scripts de Hotjar (Diplomado IA 2026-2)
 
 ## Antes de cada prueba
 
-- **Para que todos empiecen igual,** usen como URL de inicio `https://diplomadoia.proyectosdeclase.online/?reset=1`. Ese `?reset=1` borra el progreso y los borradores guardados en el navegador del participante; la página se ve normal.
+- **Para que todos empiecen igual,** usen como URL de inicio `https://diplomadoia.proyectosdeclase.online/?reset=1&modo=docente`. Ese `?reset=1` borra el progreso y los borradores guardados en el navegador del participante; la página se ve normal.
 - Los datos se guardan solo en el navegador de cada persona (demostración local). No hay servidor ni base de datos.
 - Si el participante tiene un bloqueador de anuncios, puede que Hotjar no grabe. Pídanle que lo desactive para este sitio.
-- Los títulos y el contenido de las sesiones dicen "Pendiente de confirmar" o "Disponible próximamente". **Las misiones no deben depender de un tema concreto.** Usen números de sesión ("la actividad de la sesión 3").
+- **Desde el 11 de noviembre las 10 sesiones tienen su contenido real** (sesiones 1 a 10 del diplomado, módulos 1 a 4). La página que antes se llamaba «Módulo de evaluación» ahora se llama **«Sesiones 1 a 10»**; la URL no cambió. La sesión 3 pertenece al **Módulo 1** («Marcos regulatorios…»), no al de evaluación: ajusten la consigna de la Misión 2.
+
+## Cambio del 11 de noviembre: pantalla de entrada
+
+- Al entrar sin rol elegido aparece **«¿Cómo quieres navegar hoy?»** (Docente participante / Coordinador pedagógico). No pide usuario ni contraseña.
+- **Todas las URL de inicio de Maze deben llevar `modo=docente`** (por ejemplo `/index.html?modo=docente`), así el participante no ve esa pantalla y las misiones no suman un clic. Si quieren medir la entrada, usen solo `/?reset=1`: el primer clic esperado es `btn-entrar-docente`.
+- El modo coordinador ya no es una página aparte: el coordinador ve las mismas páginas con herramientas extra (franja amarilla arriba).
 
 ## Cambios del 10 de noviembre que afectan las pruebas
 
@@ -38,7 +44,7 @@ Todas las páginas tienen instalados los scripts de Hotjar (Diplomado IA 2026-2)
 
 ### Misión 1. Continuar mi curso
 
-- **Inicio:** `/?reset=1`
+- **Inicio:** `/?reset=1&modo=docente`
 - **Acción esperada:** botón amarillo **"Continuar mi curso"** en la tarjeta grande (id `btn-continuar-curso`).
 - **Destino que indica éxito:** `/sesiones/sesion-01.html`, la primera sesión sin completar para un participante nuevo.
 - **Rutas indirectas posibles:** "Explorar el mapa" → "Ver sesiones" → "Comenzar sesión" de la Sesión 01.
@@ -46,7 +52,7 @@ Todas las páginas tienen instalados los scripts de Hotjar (Diplomado IA 2026-2)
 
 ### Misión 2. Encontrar una actividad
 
-Ejemplo de consigna: "Encuentra la actividad de la sesión 3 del módulo de evaluación".
+Ejemplo de consigna: "Encuentra la actividad de la sesión 3 del diplomado, la de marcos regulatorios".
 
 - **Inicio:** `/index.html` (sin `reset`, para que el aviso no reaparezca)
 - **Ruta esperada:**
