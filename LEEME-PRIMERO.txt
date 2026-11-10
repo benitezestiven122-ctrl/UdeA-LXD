@@ -1,0 +1,62 @@
+SER PROFE EN LA ERA DE LA IA — ENTREGA 4 (ANALÍTICA UX)
+Sitio: https://diplomadoia.proyectosdeclase.online/
+
+QUÉ HAY EN ESTA CARPETA
+-----------------------
+1-SUBIR-A-HOSTINGER
+   Es el sitio web completo. Ya tiene instalados los scripts de Hotjar y Maze en todas las páginas.
+   Se sube TAL CUAL al servidor.
+
+2-PARA-JUANJO-Y-STIVEN
+   PLAN-EVALUACION-UX.md: matriz, textos para Maze, checklist y plantillas del informe.
+   RUTAS-PRUEBAS-UX.md: las 3 misiones con la URL de inicio, los botones y la URL de éxito,
+   para configurar Maze y Hotjar. Se abre con el Bloc de notas o con cualquier editor de texto.
+
+3-DOCUMENTACION
+   README.md, CONTEXTO.md y BITACORA.md: de dónde sale cada contenido, qué es provisional y qué pruebas se hicieron.
+   NO se suben al servidor.
+
+
+CÓMO SUBIR EL SITIO A HOSTINGER
+-------------------------------
+1. Entrar a hostinger.com con el usuario asignado por el profesor.
+2. Sitios web → subdominio diplomadoia → Administrador de archivos.
+3. Abrir public_html → la carpeta del proyecto (la que tiene default.php).
+4. Abrir en tu computador la carpeta 1-SUBIR-A-HOSTINGER y arrastrar al servidor TODO LO QUE HAY ADENTRO
+   (no la carpeta misma):
+      index.html
+      mapa-curso.html
+      modulo-evaluacion.html
+      bitacora.html
+      bitacora-guardada.html
+      nodo-ia.html
+      nodo-ia-caso.html
+      coordinador.html
+      404.html
+      .htaccess   (archivo oculto: activar "mostrar archivos ocultos" si no se ve.
+                   Si el servidor ya tiene un .htaccess, revisarlo antes de reemplazarlo)
+      carpeta css
+      carpeta js
+      carpeta sesiones
+      carpeta assets
+5. NO borrar ni modificar default.php.
+6. Abrir https://diplomadoia.proyectosdeclase.online/ y revisar que se vean los colores y el logo
+   y que el menú funcione. Escribir una dirección inventada (por ejemplo /prueba.html)
+   y revisar que aparezca "No encontramos esta página".
+7. Subir siempre TODO junto. Si después cambia el CSS o el JS, hay que subir también
+   todas las páginas, porque llevan el número de versión (?v=...).
+
+
+CÓMO SABER SI HOTJAR Y MAZE ESTÁN FUNCIONANDO
+---------------------------------------------
+1. En Chrome, abrir el sitio y presionar F12 → pestaña "Red" (Network). Recargar la página.
+2. En el filtro escribir: hotjar → debe aparecer hotjar-6847283.js
+   En el filtro escribir: maze   → debe aparecer maze-universal-loader.js
+3. Hacer un recorrido de prueba sin bloqueador de anuncios y revisar que aparezca en Hotjar (Recordings) y en Maze.
+
+
+IMPORTANTE
+----------
+- Para las pruebas, empezar siempre en: https://diplomadoia.proyectosdeclase.online/?reset=1
+  (deja el progreso en cero para que todos empiecen igual).
+- No poner contraseñas ni correos de acceso en ningún archivo del sitio.

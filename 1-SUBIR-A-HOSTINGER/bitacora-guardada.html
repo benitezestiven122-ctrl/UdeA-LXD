@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Hotjar Tracking Code for Diplomado IA 2026-2 -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6847283,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+<!-- Maze (proyecto Diplomado IA) -->
+<script>
+(function (m, a, z, e) {
+  var s, t, u, v;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+
+  u = document.currentScript || (function () {
+    var w = document.getElementsByTagName('script');
+    return w[w.length - 1];
+  })();
+  v = u && u.nonce;
+
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  if (v) s.setAttribute('nonce', v);
+
+  a.getElementsByTagName('head')[0].appendChild(s);
+
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '56ffa75c-a9f7-4348-a7d5-4436974a8a7c');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borrador guardado · Ser profe en la era de la IA</title>
+<meta name="description" content="Prototipo del entorno de aprendizaje del diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Geist:wght@600;700&amp;family=Jost:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="css/estilos.css?v=20261110f">
+<link rel="icon" type="image/svg+xml" href="assets/imagenes/favicon.svg">
+</head>
+<body data-root="" data-page="bitacora-guardada">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true">P<span>IA</span></span>
+      <span class="brand__name"><span>Ser profe</span> <span>en la era de la IA</span></span>
+    </a>
+    <div class="profile">
+      <label for="perfil">Perfil de prueba</label>
+      <select id="perfil" data-profile>
+        <option value="guiado">Docente · paso a paso</option>
+        <option value="libre">Docente · exploración libre</option>
+        <option value="coordinador">Coordinador pedagógico</option>
+      </select>
+    </div>
+  </div>
+</header>
+<nav class="site-nav" aria-label="Principal">
+  <div class="container site-nav__inner">
+    <ul class="site-nav__links">
+      <li><a class="site-nav__link" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"></path><path d="M5 10v10h5v-6h4v6h5V10"></path></svg>Inicio</a></li>
+      <li><a class="site-nav__link" href="mapa-curso.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 21 12 12 21 3 12z"></path></svg>Mapa del curso</a></li>
+      <li><a class="site-nav__link" href="bitacora.html" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>Mi bitácora</a></li>
+      <li><a class="site-nav__link" href="nodo-ia.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"></circle><circle cx="18" cy="8" r="2.5"></circle><circle cx="11" cy="18" r="2.5"></circle><path d="M8.3 7l7.3.7M7 8.3l3 7.4M16.6 10l-4.2 6"></path></svg>Nodo IA</a></li>
+    </ul>
+    <form class="search-form" role="search" data-search>
+      <label class="visually-hidden" for="buscar">Buscar un tema o actividad</label>
+      <input class="site-nav__search" id="buscar" type="search" placeholder="Buscar un tema o actividad" autocomplete="off">
+      <button class="search-form__btn" type="submit" aria-label="Buscar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
+      <div class="search-results" data-search-results hidden></div>
+    </form>
+  </div>
+</nav>
+<main id="contenido" class="page-main" tabindex="-1">
+  <div class="container">
+    <nav aria-label="Migas de navegación"><ol class="breadcrumbs"><li><a href="index.html">Inicio</a></li><li><a href="bitacora.html">Mi bitácora</a></li><li><span aria-current="page">Borrador guardado</span></li></ol></nav>
+    <section class="page-intro">
+      <p class="eyebrow">04 / Mi bitácora</p>
+      <h1 data-saved-title>Tu borrador se guardó.</h1>
+      <p data-saved-sub>Puedes seguir escribiendo cuando quieras.</p>
+    </section>
+    <div class="split">
+      <section class="panel" aria-labelledby="resumen-title" data-saved-summary data-hj-suppress>
+        <h2 class="h4" id="resumen-title">Lo que guardaste</h2>
+        <p class="text-secondary" data-saved-empty>No encontramos un borrador guardado en este navegador.</p>
+      </section>
+      <aside class="panel panel--soft" aria-labelledby="siguiente-title">
+        <h2 class="h4" id="siguiente-title">¿Qué quieres hacer ahora?</h2>
+        <div class="notice"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5h.01"></path></svg><p><strong>Demostración local.</strong> El borrador se guardó solo en este navegador. No es una entrega académica ni llega al equipo tutor.</p></div>
+        <a class="btn btn--primary" id="btn-seguir-escribiendo" href="bitacora.html" data-keep-writing>Seguir escribiendo<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+        <a class="btn btn--secondary" id="btn-volver-inicio" href="index.html">Volver al inicio</a>
+      </aside>
+    </div>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <img class="site-footer__logo" src="assets/imagenes/logo-udea.webp" width="73" height="96" alt="Logo de la Universidad de Antioquia">
+    <nav aria-label="Índice del sitio">
+      <ul class="site-footer__links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="mapa-curso.html">Mapa del curso</a></li>
+        <li><a href="modulo-evaluacion.html">Módulo de evaluación</a></li>
+        <li><a href="bitacora.html">Mi bitácora</a></li>
+        <li><a href="nodo-ia.html">Nodo IA</a></li>
+      </ul>
+    </nav>
+    <p class="site-footer__note">Prototipo académico del equipo LXD para el diplomado Ser profe en la era de la IA, Facultad de Educación, Universidad de Antioquia. El progreso y la bitácora son una demostración local: se guardan solo en este navegador y no son una entrega académica.</p>
+  </div>
+</footer>
+<script src="js/datos-demo.js?v=20261110f"></script>
+<script src="js/main.js?v=20261110f"></script>
+<script src="js/extras.js?v=20261110f"></script>
+</body>
+</html>
